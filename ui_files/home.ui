@@ -18,7 +18,7 @@
     background-image: url(&quot;C:/Users/sinar/OneDrive/Documents/GitHub/PharmaShift/assets/home_screen_background.png&quot;);
 }</string>
   </property>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="exit_button">
    <property name="geometry">
     <rect>
      <x>1000</x>
