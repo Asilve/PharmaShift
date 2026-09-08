@@ -8,8 +8,10 @@ from ui.manage_holidays import ManageHolidaysPage
 
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, database):
         super().__init__()
+
+        self.database = database
 
         self.setWindowTitle("Pharma Shift")
         self.setFixedSize(1280,720)
@@ -24,7 +26,7 @@ class MainWindow(QMainWindow):
          # Create application pages
         self.home_page = HomePage()
         self.generate_schedule_page = GenerateSchedulePage()
-        self.manage_templates_page = ManageTemplatesPage()
+        self.manage_templates_page = ManageTemplatesPage(self.database)
         self.manage_holidays_page = ManageHolidaysPage()
 
         # Add pages to the application stack
