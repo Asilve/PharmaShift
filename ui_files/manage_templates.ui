@@ -200,7 +200,7 @@ QScrollBar::sub-page:vertical {
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="add_button">
       <property name="minimumSize">
        <size>
         <width>250</width>
@@ -239,7 +239,7 @@ QPushButton:hover {
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="edit_button">
       <property name="enabled">
        <bool>false</bool>
       </property>
@@ -288,7 +288,7 @@ QPushButton:disabled {
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="delete_button">
       <property name="enabled">
        <bool>false</bool>
       </property>
