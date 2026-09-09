@@ -1,6 +1,6 @@
 from PySide6.QtCore import QEvent, Qt, Signal
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLayout, QSizePolicy
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLayout, QSizePolicy, QMessageBox
 
 from models.template import EmployeeTemplate
 from ui.template_card import TemplateCard
@@ -59,6 +59,7 @@ class ManageTemplatesPage(QWidget):
         # Button Emits
         self.add_button.clicked.connect(self.add_template_clicked.emit)
         self.edit_button.clicked.connect(self.edit_selected_template)
+        self.delete_button.clicked.connect(self.delete_selected_template)
 
         self.edit_button.setEnabled(False)
         self.delete_button.setEnabled(False)
@@ -81,8 +82,21 @@ class ManageTemplatesPage(QWidget):
 
             self.template_list_layout.addWidget(card,0,Qt.AlignHCenter | Qt.AlignTop)
 
+            self.template_list_layout.invalidate()
+        self.template_list_layout.activate()
         self.scroll_content.setMinimumHeight(self.template_list_layout.sizeHint().height())
         self.clear_selection()
+
+        print("----- TEMPLATE LIST -----")
+        print("Cards:", self.template_list_layout.count())
+        print("Scroll area:", self.ui.scrollArea.size())
+        print("Scroll content:", self.scroll_content.size())
+        print("Content minimum:", self.scroll_content.minimumHeight())
+        print("Content maximum:", self.scroll_content.maximumHeight())
+        print("Layout size hint:", self.template_list_layout.sizeHint())
+        print("Layout geometry:", self.template_list_layout.geometry())
+        print("Vertical scrollbar:",
+            self.ui.scrollArea.verticalScrollBar().isVisible())
 
     def select_template(self, card):
         if self.selected_card is not None:
@@ -130,3 +144,35 @@ class ManageTemplatesPage(QWidget):
             if widget is not None:
                 widget.deleteLater()
 
+
+    def delete_selected_template(self):
+        if self.selected_card is None:
+            return
+
+        template = self.selected_card.template
+
+        reply = QMessageBox.question(
+            self,
+            "Delete Template",
+            f"Are you sure you want to delete the template for {template.name}?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+
+        if reply == QMessageBox.Yes:
+            self.database.delete_template(template.id)
+
+            card = self.selected_card
+
+            self.clear_selection()
+
+            self.template_list_layout.removeWidget(card)
+            card.setParent(None)
+            card.deleteLater()
+
+            self.template_list_layout.invalidate()
+            self.template_list_layout.activate()
+
+            self.scroll_content.setMinimumHeight(
+                self.template_list_layout.sizeHint().height()
+        )

@@ -48,3 +48,13 @@ class Database:
             (name, notes, colour, template_id)
         )
         self.connection.commit()
+
+    def delete_template(self, template_id):
+        self.connection.execute(
+            """
+            DELETE FROM templates
+            WHERE id = ?
+            """,
+            (template_id,)
+        )
+        self.connection.commit()
