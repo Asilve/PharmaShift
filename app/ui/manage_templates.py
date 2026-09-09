@@ -68,6 +68,8 @@ class ManageTemplatesPage(QWidget):
         
 
     def load_templates(self):
+        self.clear_template_cards()
+
         templates = self.database.get_templates()
 
         for template_data in templates:
@@ -80,7 +82,7 @@ class ManageTemplatesPage(QWidget):
             self.template_list_layout.addWidget(card,0,Qt.AlignHCenter | Qt.AlignTop)
 
         self.scroll_content.setMinimumHeight(self.template_list_layout.sizeHint().height())
-
+        self.clear_selection()
 
     def select_template(self, card):
         if self.selected_card is not None:
@@ -118,4 +120,13 @@ class ManageTemplatesPage(QWidget):
             return
 
         self.edit_template_clicked.emit(self.selected_card.template)
+
+    def clear_template_cards(self):
+        while self.template_list_layout.count():
+            item = self.template_list_layout.takeAt(0)
+
+            widget = item.widget()
+
+            if widget is not None:
+                widget.deleteLater()
 

@@ -37,3 +37,14 @@ class Database:
         )
 
         return cursor.fetchall()
+
+    def update_template(self, template_id, name, notes, colour):
+        self.connection.execute(
+            """
+            UPDATE templates
+            SET name = ?, notes = ?, colour = ?
+            WHERE id = ?
+            """,
+            (name, notes, colour, template_id)
+        )
+        self.connection.commit()

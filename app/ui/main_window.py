@@ -51,6 +51,9 @@ class MainWindow(QMainWindow):
         self.manage_holidays_page.back_clicked.connect(self.show_home)
         self.template_editor_page.back_clicked.connect(self.show_manage_templates)
 
+        # Save Template
+        self.template_editor_page.saved.connect(self.template_saved)
+
         # Exit button
         self.home_page.exit_clicked.connect(self.close_application)
 
@@ -76,6 +79,10 @@ class MainWindow(QMainWindow):
     def show_edit_template(self, template):
         self.template_editor_page.set_template(template)
         self.page_stack.setCurrentWidget(self.template_editor_page)
+
+    def template_saved(self):
+        self.manage_templates_page.load_templates()
+        self.show_manage_templates()
 
     def close_application(self):
         QApplication.quit()

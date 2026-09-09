@@ -126,6 +126,12 @@ QGroupBox::title {
      </property>
      <item row="0" column="1">
       <widget class="QLineEdit" name="name_edit">
+       <property name="font">
+        <font>
+         <pointsize>-1</pointsize>
+         <italic>false</italic>
+        </font>
+       </property>
        <property name="statusTip">
         <string/>
        </property>
@@ -154,6 +160,12 @@ QLineEdit:focus {
      </item>
      <item row="1" column="1">
       <widget class="QLineEdit" name="notes_edit">
+       <property name="font">
+        <font>
+         <pointsize>-1</pointsize>
+         <italic>false</italic>
+        </font>
+       </property>
        <property name="styleSheet">
         <string notr="true">QLineEdit {
     background-color: white;
@@ -179,10 +191,17 @@ QLineEdit:focus {
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="name_label">
+       <property name="font">
+        <font>
+         <pointsize>-1</pointsize>
+         <italic>false</italic>
+         <fontweight>DemiBold</fontweight>
+        </font>
+       </property>
        <property name="styleSheet">
         <string notr="true">QLabel {
     color: #3F494C;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
 }</string>
        </property>
@@ -196,7 +215,7 @@ QLineEdit:focus {
        <property name="styleSheet">
         <string notr="true">QLabel {
     color: #3F494C;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
 }</string>
        </property>
@@ -210,7 +229,7 @@ QLineEdit:focus {
        <property name="styleSheet">
         <string notr="true">QLabel {
     color: #3F494C;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
 }</string>
        </property>
@@ -242,7 +261,7 @@ QLineEdit:focus {
            <property name="styleSheet">
             <string notr="true">#colour_preview {
     background-color: #2F6F73;
-    border: 1px solid #B8BEC1;
+    border: 2px solid #B8BEC1;
     border-radius: 5px;
 }</string>
            </property>
