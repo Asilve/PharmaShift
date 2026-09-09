@@ -11,27 +11,27 @@ class Database:
             CREATE TABLE IF NOT EXISTS templates (
                 id INTEGER PRIMARY KEY,
                 name TEXT NOT NULL,
-                colour TEXT NOT NULL
+                colour TEXT NOT NULL,
+                notes TEXT NOT NULL DEFAULT ''
             )
         """)
 
         self.connection.commit()
 
-    def add_template(self, name, colour):
+    def add_template(self, name, notes, colour):
         self.connection.execute(
             """
-            INSERT INTO templates (name, colour)
-            VALUES (?, ?)
+            INSERT INTO templates (name, notes, colour)
+            VALUES (?, ?, ?)
             """,
-            (name, colour)
+            (name, notes, colour)
         )
-
         self.connection.commit()
 
     def get_templates(self):
         cursor = self.connection.execute(
             """
-            SELECT id, name, colour
+            SELECT id, name, colour, notes
             FROM templates
             """
         )

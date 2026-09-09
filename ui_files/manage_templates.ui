@@ -160,10 +160,10 @@ QScrollBar::sub-page:vertical {
        <widget class="QWidget" name="verticalLayoutWidget_2">
         <property name="geometry">
          <rect>
-          <x>9</x>
-          <y>9</y>
+          <x>10</x>
+          <y>0</y>
           <width>1221</width>
-          <height>481</height>
+          <height>491</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="template_list_layout">

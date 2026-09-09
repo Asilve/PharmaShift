@@ -5,6 +5,7 @@ from ui.home_page import HomePage
 from ui.generate_schedule import GenerateSchedulePage
 from ui.manage_templates import ManageTemplatesPage
 from ui.manage_holidays import ManageHolidaysPage
+from ui.template_editor import TemplateEditorPage
 
 
 class MainWindow(QMainWindow):
@@ -28,22 +29,27 @@ class MainWindow(QMainWindow):
         self.generate_schedule_page = GenerateSchedulePage()
         self.manage_templates_page = ManageTemplatesPage(self.database)
         self.manage_holidays_page = ManageHolidaysPage()
+        self.template_editor_page = TemplateEditorPage(self.database)
 
         # Add pages to the application stack
         self.page_stack.addWidget(self.home_page)
         self.page_stack.addWidget(self.generate_schedule_page)
         self.page_stack.addWidget(self.manage_templates_page)
         self.page_stack.addWidget(self.manage_holidays_page)
+        self.page_stack.addWidget(self.template_editor_page)
 
         # Connect page signals to navigation
         self.home_page.generate_schedule_clicked.connect(self.show_generate_schedule)
         self.home_page.manage_templates_clicked.connect(self.show_manage_templates)
         self.home_page.manage_holidays_clicked.connect(self.show_manage_holidays)
+        self.manage_templates_page.add_template_clicked.connect(self.show_add_new_template)
+        self.manage_templates_page.edit_template_clicked.connect(self.show_edit_template)
 
-        # Back to home buttons
+        # Back buttons
         self.generate_schedule_page.back_clicked.connect(self.show_home)
         self.manage_templates_page.back_clicked.connect(self.show_home)
         self.manage_holidays_page.back_clicked.connect(self.show_home)
+        self.template_editor_page.back_clicked.connect(self.show_manage_templates)
 
         # Exit button
         self.home_page.exit_clicked.connect(self.close_application)
@@ -62,6 +68,14 @@ class MainWindow(QMainWindow):
 
     def show_manage_holidays(self):
         self.page_stack.setCurrentWidget(self.manage_holidays_page)
+    
+    def show_add_new_template(self):
+        self.template_editor_page.set_template(None)
+        self.page_stack.setCurrentWidget(self.template_editor_page)
+
+    def show_edit_template(self, template):
+        self.template_editor_page.set_template(template)
+        self.page_stack.setCurrentWidget(self.template_editor_page)
 
     def close_application(self):
         QApplication.quit()

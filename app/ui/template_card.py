@@ -33,7 +33,7 @@ class TemplateCard(QWidget):
         self.template = template
 
         self.name_label.setText(template.name)
-        self.subtitle_label.setText("Pharmacist Template")
+        self.subtitle_label.setText(template.notes)
         self.colour_indicator.setStyleSheet(f"background-color: {template.colour};")
 
     def mousePressEvent(self, event):
