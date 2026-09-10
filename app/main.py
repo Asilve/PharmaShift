@@ -11,9 +11,6 @@ def main():
     database = Database()
     database.create_tables()
 
-    templates = database.get_templates()
-
-    print(templates)
 
     window = MainWindow(database)
     window.show()

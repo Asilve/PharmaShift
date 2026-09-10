@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>add_shift_card</class>
+ <widget class="QWidget" name="add_shift_card">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>168</width>
+    <height>80</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>140</width>
+    <height>80</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>168</width>
+    <height>80</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#add_shift_card {
+    background-color: #F7F5FB;
+    border: 2px dashed #7567A8;
+    border-radius: 8px;
+}
+#add_shift_card:hover {
+    background-color: #EEEBF6;
+    border: 2px dashed #5F538D;
+}</string>
+  </property>
+  <widget class="QLabel" name="add_shift_label">
+   <property name="geometry">
+    <rect>
+     <x>-2</x>
+     <y>10</y>
+     <width>171</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial Rounded MT</family>
+     <pointsize>13</pointsize>
+     <underline>false</underline>
+     <fontweight>DemiBold</fontweight>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#add_shift_label {
+    color: #5F538D;
+    font-weight: 600;
+}</string>
+   </property>
+   <property name="text">
+    <string>Add New Shift</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignmentFlag::AlignCenter</set>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

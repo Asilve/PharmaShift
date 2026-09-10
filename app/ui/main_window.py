@@ -77,7 +77,11 @@ class MainWindow(QMainWindow):
         self.page_stack.setCurrentWidget(self.template_editor_page)
 
     def show_edit_template(self, template):
-        self.template_editor_page.set_template(template)
+        full_template = self.database.get_template(template.id)
+
+        if full_template is None:
+            return    
+        self.template_editor_page.set_template(full_template)
         self.page_stack.setCurrentWidget(self.template_editor_page)
 
     def template_saved(self):

@@ -10,6 +10,24 @@
     <height>720</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>2</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1280</width>
+    <height>720</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1280</width>
+    <height>720</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -315,6 +333,12 @@ QLineEdit:focus {
      <height>361</height>
     </rect>
    </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="styleSheet">
     <string notr="true">QGroupBox {
     background-color: #F8F9FA;
@@ -343,55 +367,59 @@ QGroupBox::title {
       <x>0</x>
       <y>20</y>
       <width>1241</width>
-      <height>331</height>
+      <height>341</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
-      <number>2</number>
+      <number>6</number>
+     </property>
+     <property name="leftMargin">
+      <number>8</number>
+     </property>
+     <property name="topMargin">
+      <number>8</number>
+     </property>
+     <property name="rightMargin">
+      <number>8</number>
+     </property>
+     <property name="bottomMargin">
+      <number>8</number>
      </property>
      <item>
       <widget class="QWidget" name="monday_column" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>160</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>160</width>
-         <height>16777215</height>
-        </size>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
        <widget class="QWidget" name="verticalLayoutWidget">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>161</width>
-          <height>331</height>
+          <width>170</width>
+          <height>325</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="monday_layout">
          <property name="spacing">
-          <number>3</number>
+          <number>4</number>
          </property>
          <item>
           <widget class="QLabel" name="monday_label">
-           <property name="font">
-            <font>
-             <family>Segoe UI</family>
-             <pointsize>-1</pointsize>
-             <underline>true</underline>
-             <fontweight>DemiBold</fontweight>
-            </font>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLabel {
-    color: #3F494C;
-    font-size: 14px;
+            <string notr="true">#monday_label {
+    color: #263238;
     font-weight: 600;
+    padding: 4px;
 }</string>
            </property>
            <property name="text">
@@ -404,18 +432,89 @@ QGroupBox::title {
          </item>
          <item>
           <widget class="QScrollArea" name="monday_scroll_area">
+           <property name="styleSheet">
+            <string notr="true">#monday_scroll_area {
+    background-color: #F7F8F9;
+    border: none;
+}
+
+QScrollBar:vertical {
+    width: 8px;
+    background: transparent;
+}
+
+QScrollBar::handle:vertical {
+    background: #C4CDD2;
+    border-radius: 4px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #9DAAB1;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
+}</string>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+           </property>
            <property name="widgetResizable">
             <bool>true</bool>
            </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents">
+           <widget class="QWidget" name="monday_scroll_content">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>155</width>
-              <height>303</height>
+              <width>168</width>
+              <height>295</height>
              </rect>
             </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">#monday_scroll_content {
+    background-color: #F7F8F9;
+    border: 1px solid #D6D9DC;
+    border-radius: 10px;
+}</string>
+            </property>
+            <widget class="QWidget" name="verticalLayoutWidget_2">
+             <property name="geometry">
+              <rect>
+               <x>2</x>
+               <y>3</y>
+               <width>166</width>
+               <height>290</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="monday_shift_layout">
+              <property name="leftMargin">
+               <number>6</number>
+              </property>
+              <property name="topMargin">
+               <number>6</number>
+              </property>
+              <property name="rightMargin">
+               <number>6</number>
+              </property>
+              <property name="bottomMargin">
+               <number>6</number>
+              </property>
+             </layout>
+            </widget>
            </widget>
           </widget>
          </item>
@@ -425,45 +524,38 @@ QGroupBox::title {
      </item>
      <item>
       <widget class="QWidget" name="tuesday_column" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>160</width>
-         <height>0</height>
-        </size>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="maximumSize">
-        <size>
-         <width>160</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <widget class="QWidget" name="verticalLayoutWidget_2">
+       <widget class="QWidget" name="verticalLayoutWidget_7">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>161</width>
-          <height>331</height>
+          <width>170</width>
+          <height>325</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="tuesday_layout">
          <property name="spacing">
-          <number>3</number>
+          <number>4</number>
          </property>
          <item>
           <widget class="QLabel" name="tuesday_label">
-           <property name="font">
-            <font>
-             <pointsize>-1</pointsize>
-             <underline>true</underline>
-             <fontweight>DemiBold</fontweight>
-            </font>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLabel {
-    color: #3F494C;
-    font-size: 14px;
+            <string notr="true">#tuesday_label {
+    color: #263238;
     font-weight: 600;
+    padding: 4px;
 }</string>
            </property>
            <property name="text">
@@ -476,18 +568,89 @@ QGroupBox::title {
          </item>
          <item>
           <widget class="QScrollArea" name="tuesday_scroll_area">
+           <property name="styleSheet">
+            <string notr="true">#tuesday_scroll_area {
+    background-color: #F7F8F9;
+    border: none;
+}
+
+QScrollBar:vertical {
+    width: 8px;
+    background: transparent;
+}
+
+QScrollBar::handle:vertical {
+    background: #C4CDD2;
+    border-radius: 4px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #9DAAB1;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
+}</string>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+           </property>
            <property name="widgetResizable">
             <bool>true</bool>
            </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <widget class="QWidget" name="tuesday_scroll_content">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>155</width>
-              <height>303</height>
+              <width>168</width>
+              <height>295</height>
              </rect>
             </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">#tuesday_scroll_content {
+    background-color: #F7F8F9;
+    border: 1px solid #D6D9DC;
+    border-radius: 10px;
+}</string>
+            </property>
+            <widget class="QWidget" name="verticalLayoutWidget_8">
+             <property name="geometry">
+              <rect>
+               <x>2</x>
+               <y>3</y>
+               <width>166</width>
+               <height>290</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="tuesday_shift_layout">
+              <property name="leftMargin">
+               <number>6</number>
+              </property>
+              <property name="topMargin">
+               <number>6</number>
+              </property>
+              <property name="rightMargin">
+               <number>6</number>
+              </property>
+              <property name="bottomMargin">
+               <number>6</number>
+              </property>
+             </layout>
+            </widget>
            </widget>
           </widget>
          </item>
@@ -497,51 +660,41 @@ QGroupBox::title {
      </item>
      <item>
       <widget class="QWidget" name="wednesday_column" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>160</width>
-         <height>0</height>
-        </size>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="maximumSize">
-        <size>
-         <width>160</width>
-         <height>16777215</height>
-        </size>
+       <property name="styleSheet">
+        <string notr="true"/>
        </property>
-       <property name="baseSize">
-        <size>
-         <width>160</width>
-         <height>0</height>
-        </size>
-       </property>
-       <widget class="QWidget" name="verticalLayoutWidget_3">
+       <widget class="QWidget" name="verticalLayoutWidget_9">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>161</width>
-          <height>331</height>
+          <width>170</width>
+          <height>325</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="wednesday_layout">
          <property name="spacing">
-          <number>3</number>
+          <number>4</number>
          </property>
          <item>
           <widget class="QLabel" name="wednesday_label">
-           <property name="font">
-            <font>
-             <pointsize>-1</pointsize>
-             <underline>true</underline>
-             <fontweight>DemiBold</fontweight>
-            </font>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLabel {
-    color: #3F494C;
-    font-size: 14px;
+            <string notr="true">#wednesday_label {
+    color: #263238;
     font-weight: 600;
+    padding: 4px;
 }</string>
            </property>
            <property name="text">
@@ -554,18 +707,89 @@ QGroupBox::title {
          </item>
          <item>
           <widget class="QScrollArea" name="wednesday_scroll_area">
+           <property name="styleSheet">
+            <string notr="true">#wednesday_scroll_area {
+    background-color: #F7F8F9;
+    border: none;
+}
+
+QScrollBar:vertical {
+    width: 8px;
+    background: transparent;
+}
+
+QScrollBar::handle:vertical {
+    background: #C4CDD2;
+    border-radius: 4px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #9DAAB1;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
+}</string>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+           </property>
            <property name="widgetResizable">
             <bool>true</bool>
            </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents_3">
+           <widget class="QWidget" name="wednesday_scroll_content">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>155</width>
-              <height>303</height>
+              <width>168</width>
+              <height>295</height>
              </rect>
             </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">#wednesday_scroll_content {
+    background-color: #F7F8F9;
+    border: 1px solid #D6D9DC;
+    border-radius: 10px;
+}</string>
+            </property>
+            <widget class="QWidget" name="verticalLayoutWidget_10">
+             <property name="geometry">
+              <rect>
+               <x>2</x>
+               <y>3</y>
+               <width>166</width>
+               <height>290</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="wednesday_shift_layout">
+              <property name="leftMargin">
+               <number>6</number>
+              </property>
+              <property name="topMargin">
+               <number>6</number>
+              </property>
+              <property name="rightMargin">
+               <number>6</number>
+              </property>
+              <property name="bottomMargin">
+               <number>6</number>
+              </property>
+             </layout>
+            </widget>
            </widget>
           </widget>
          </item>
@@ -575,45 +799,38 @@ QGroupBox::title {
      </item>
      <item>
       <widget class="QWidget" name="thursday_column" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>160</width>
-         <height>0</height>
-        </size>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="maximumSize">
-        <size>
-         <width>160</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <widget class="QWidget" name="verticalLayoutWidget_4">
+       <widget class="QWidget" name="verticalLayoutWidget_11">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>161</width>
-          <height>331</height>
+          <width>169</width>
+          <height>325</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="thursday_layout">
          <property name="spacing">
-          <number>3</number>
+          <number>4</number>
          </property>
          <item>
           <widget class="QLabel" name="thursday_label">
-           <property name="font">
-            <font>
-             <pointsize>-1</pointsize>
-             <underline>true</underline>
-             <fontweight>DemiBold</fontweight>
-            </font>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLabel {
-    color: #3F494C;
-    font-size: 14px;
+            <string notr="true">#thursday_label {
+    color: #263238;
     font-weight: 600;
+    padding: 4px;
 }</string>
            </property>
            <property name="text">
@@ -626,18 +843,89 @@ QGroupBox::title {
          </item>
          <item>
           <widget class="QScrollArea" name="thursday_scroll_area">
+           <property name="styleSheet">
+            <string notr="true">#thursday_scroll_area {
+    background-color: #F7F8F9;
+    border: none;
+}
+
+QScrollBar:vertical {
+    width: 8px;
+    background: transparent;
+}
+
+QScrollBar::handle:vertical {
+    background: #C4CDD2;
+    border-radius: 4px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #9DAAB1;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
+}</string>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+           </property>
            <property name="widgetResizable">
             <bool>true</bool>
            </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents_4">
+           <widget class="QWidget" name="thursday_scroll_content">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>155</width>
-              <height>303</height>
+              <width>167</width>
+              <height>295</height>
              </rect>
             </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">#thursday_scroll_content {
+    background-color: #F7F8F9;
+    border: 1px solid #D6D9DC;
+    border-radius: 10px;
+}</string>
+            </property>
+            <widget class="QWidget" name="verticalLayoutWidget_12">
+             <property name="geometry">
+              <rect>
+               <x>2</x>
+               <y>3</y>
+               <width>165</width>
+               <height>290</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="thursday_shift_layout">
+              <property name="leftMargin">
+               <number>6</number>
+              </property>
+              <property name="topMargin">
+               <number>6</number>
+              </property>
+              <property name="rightMargin">
+               <number>6</number>
+              </property>
+              <property name="bottomMargin">
+               <number>6</number>
+              </property>
+             </layout>
+            </widget>
            </widget>
           </widget>
          </item>
@@ -647,45 +935,41 @@ QGroupBox::title {
      </item>
      <item>
       <widget class="QWidget" name="friday_column" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>160</width>
-         <height>0</height>
-        </size>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="maximumSize">
-        <size>
-         <width>160</width>
-         <height>16777215</height>
-        </size>
+       <property name="styleSheet">
+        <string notr="true"/>
        </property>
-       <widget class="QWidget" name="verticalLayoutWidget_5">
+       <widget class="QWidget" name="verticalLayoutWidget_13">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>161</width>
-          <height>331</height>
+          <width>170</width>
+          <height>325</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="friday_layout">
          <property name="spacing">
-          <number>3</number>
+          <number>4</number>
          </property>
          <item>
           <widget class="QLabel" name="friday_label">
-           <property name="font">
-            <font>
-             <pointsize>-1</pointsize>
-             <underline>true</underline>
-             <fontweight>DemiBold</fontweight>
-            </font>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLabel {
-    color: #3F494C;
-    font-size: 14px;
+            <string notr="true">#friday_label {
+    color: #263238;
     font-weight: 600;
+    padding: 4px;
 }</string>
            </property>
            <property name="text">
@@ -698,18 +982,92 @@ QGroupBox::title {
          </item>
          <item>
           <widget class="QScrollArea" name="friday_scroll_area">
+           <property name="styleSheet">
+            <string notr="true">#friday_scroll_area {
+    background-color: #F7F8F9;
+    border: none;
+}
+
+QScrollBar:vertical {
+    width: 8px;
+    background: transparent;
+}
+
+QScrollBar::handle:vertical {
+    background: #C4CDD2;
+    border-radius: 4px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #9DAAB1;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
+}</string>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+           </property>
            <property name="widgetResizable">
             <bool>true</bool>
            </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents_5">
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+           <widget class="QWidget" name="friday_scroll_content">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>155</width>
-              <height>303</height>
+              <width>168</width>
+              <height>295</height>
              </rect>
             </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">#friday_scroll_content {
+    background-color: #F7F8F9;
+    border: 1px solid #D6D9DC;
+    border-radius: 10px;
+}</string>
+            </property>
+            <widget class="QWidget" name="verticalLayoutWidget_14">
+             <property name="geometry">
+              <rect>
+               <x>2</x>
+               <y>3</y>
+               <width>166</width>
+               <height>290</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="friday_shift_layout">
+              <property name="leftMargin">
+               <number>6</number>
+              </property>
+              <property name="topMargin">
+               <number>6</number>
+              </property>
+              <property name="rightMargin">
+               <number>6</number>
+              </property>
+              <property name="bottomMargin">
+               <number>6</number>
+              </property>
+             </layout>
+            </widget>
            </widget>
           </widget>
          </item>
@@ -719,45 +1077,38 @@ QGroupBox::title {
      </item>
      <item>
       <widget class="QWidget" name="saturday_column" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>160</width>
-         <height>0</height>
-        </size>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="maximumSize">
-        <size>
-         <width>160</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <widget class="QWidget" name="verticalLayoutWidget_6">
+       <widget class="QWidget" name="verticalLayoutWidget_15">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>161</width>
-          <height>331</height>
+          <width>170</width>
+          <height>325</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="saturday_layout">
          <property name="spacing">
-          <number>3</number>
+          <number>4</number>
          </property>
          <item>
           <widget class="QLabel" name="saturday_label">
-           <property name="font">
-            <font>
-             <pointsize>-1</pointsize>
-             <underline>true</underline>
-             <fontweight>DemiBold</fontweight>
-            </font>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLabel {
-    color: #3F494C;
-    font-size: 14px;
+            <string notr="true">#saturday_label {
+    color: #263238;
     font-weight: 600;
+    padding: 4px;
 }</string>
            </property>
            <property name="text">
@@ -770,18 +1121,89 @@ QGroupBox::title {
          </item>
          <item>
           <widget class="QScrollArea" name="saturday_scroll_area">
+           <property name="styleSheet">
+            <string notr="true">#saturday_scroll_area {
+    background-color: #F7F8F9;
+    border: none;
+}
+
+QScrollBar:vertical {
+    width: 8px;
+    background: transparent;
+}
+
+QScrollBar::handle:vertical {
+    background: #C4CDD2;
+    border-radius: 4px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #9DAAB1;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
+}</string>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+           </property>
            <property name="widgetResizable">
             <bool>true</bool>
            </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents_6">
+           <widget class="QWidget" name="saturday_scroll_content">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>155</width>
-              <height>303</height>
+              <width>168</width>
+              <height>295</height>
              </rect>
             </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">#saturday_scroll_content {
+    background-color: #F7F8F9;
+    border: 1px solid #D6D9DC;
+    border-radius: 10px;
+}</string>
+            </property>
+            <widget class="QWidget" name="verticalLayoutWidget_16">
+             <property name="geometry">
+              <rect>
+               <x>2</x>
+               <y>3</y>
+               <width>166</width>
+               <height>290</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="saturday_shift_layout">
+              <property name="leftMargin">
+               <number>6</number>
+              </property>
+              <property name="topMargin">
+               <number>6</number>
+              </property>
+              <property name="rightMargin">
+               <number>6</number>
+              </property>
+              <property name="bottomMargin">
+               <number>6</number>
+              </property>
+             </layout>
+            </widget>
            </widget>
           </widget>
          </item>
@@ -791,45 +1213,38 @@ QGroupBox::title {
      </item>
      <item>
       <widget class="QWidget" name="sunday_column" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>160</width>
-         <height>0</height>
-        </size>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="maximumSize">
-        <size>
-         <width>160</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <widget class="QWidget" name="verticalLayoutWidget_7">
+       <widget class="QWidget" name="verticalLayoutWidget_17">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>161</width>
-          <height>331</height>
+          <width>170</width>
+          <height>325</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="sunday_layout">
          <property name="spacing">
-          <number>3</number>
+          <number>4</number>
          </property>
          <item>
           <widget class="QLabel" name="sunday_label">
-           <property name="font">
-            <font>
-             <pointsize>-1</pointsize>
-             <underline>true</underline>
-             <fontweight>DemiBold</fontweight>
-            </font>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="styleSheet">
-            <string notr="true">QLabel {
-    color: #3F494C;
-    font-size: 14px;
+            <string notr="true">#sunday_label {
+    color: #263238;
     font-weight: 600;
+    padding: 4px;
 }</string>
            </property>
            <property name="text">
@@ -842,18 +1257,89 @@ QGroupBox::title {
          </item>
          <item>
           <widget class="QScrollArea" name="sunday_scroll_area">
+           <property name="styleSheet">
+            <string notr="true">#sunday_scroll_area {
+    background-color: #F7F8F9;
+    border: none;
+}
+
+QScrollBar:vertical {
+    width: 8px;
+    background: transparent;
+}
+
+QScrollBar::handle:vertical {
+    background: #C4CDD2;
+    border-radius: 4px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #9DAAB1;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
+}</string>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+           </property>
            <property name="widgetResizable">
             <bool>true</bool>
            </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents_7">
+           <widget class="QWidget" name="sunday_scroll_content">
             <property name="geometry">
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>155</width>
-              <height>303</height>
+              <width>168</width>
+              <height>295</height>
              </rect>
             </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">#sunday_scroll_content {
+    background-color: #F7F8F9;
+    border: 1px solid #D6D9DC;
+    border-radius: 10px;
+}</string>
+            </property>
+            <widget class="QWidget" name="verticalLayoutWidget_18">
+             <property name="geometry">
+              <rect>
+               <x>2</x>
+               <y>3</y>
+               <width>166</width>
+               <height>290</height>
+              </rect>
+             </property>
+             <layout class="QVBoxLayout" name="sunday_shift_layout">
+              <property name="leftMargin">
+               <number>6</number>
+              </property>
+              <property name="topMargin">
+               <number>6</number>
+              </property>
+              <property name="rightMargin">
+               <number>6</number>
+              </property>
+              <property name="bottomMargin">
+               <number>6</number>
+              </property>
+             </layout>
+            </widget>
            </widget>
           </widget>
          </item>
@@ -915,4 +1401,21 @@ QPushButton:pressed {
  </widget>
  <resources/>
  <connections/>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>10</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>10</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>false</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>false</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
 </ui>

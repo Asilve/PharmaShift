@@ -86,17 +86,7 @@ class ManageTemplatesPage(QWidget):
         self.template_list_layout.activate()
         self.scroll_content.setMinimumHeight(self.template_list_layout.sizeHint().height())
         self.clear_selection()
-
-        print("----- TEMPLATE LIST -----")
-        print("Cards:", self.template_list_layout.count())
-        print("Scroll area:", self.ui.scrollArea.size())
-        print("Scroll content:", self.scroll_content.size())
-        print("Content minimum:", self.scroll_content.minimumHeight())
-        print("Content maximum:", self.scroll_content.maximumHeight())
-        print("Layout size hint:", self.template_list_layout.sizeHint())
-        print("Layout geometry:", self.template_list_layout.geometry())
-        print("Vertical scrollbar:",
-            self.ui.scrollArea.verticalScrollBar().isVisible())
+        
 
     def select_template(self, card):
         if self.selected_card is not None:
