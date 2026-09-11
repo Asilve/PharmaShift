@@ -51,7 +51,7 @@
      <property name="font">
       <font>
        <family>Arial Rounded MT</family>
-       <pointsize>13</pointsize>
+       <pointsize>12</pointsize>
        <underline>false</underline>
        <fontweight>DemiBold</fontweight>
       </font>

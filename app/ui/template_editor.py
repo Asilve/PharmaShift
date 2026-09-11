@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLineEdit, QFra
 
 from ui.shift_card import ShiftCard
 from ui.add_shift_card import AddShiftCard
+from ui.shift_editor import ShiftEditorDialog
 
 
 class TemplateEditorPage(QWidget):
@@ -17,6 +18,7 @@ class TemplateEditorPage(QWidget):
 
         self.database = database
         self.template = None
+        self.shift_editor = ShiftEditorDialog(self)
 
         # Employee Details
         self.employee_colour = "#FFFFFF"
@@ -73,8 +75,9 @@ class TemplateEditorPage(QWidget):
             6: self.ui.findChild(QWidget, "sunday_scroll_content"),
         }
 
-        # Make each scroll content widget manage its existing
-        # Designer-generated layout container.
+        # Shift Editor
+        self.shift_editor.saved.connect(self.save_new_shift)
+
         self.setup_scroll_contents()
 
     def setup_scroll_contents(self):
@@ -205,6 +208,7 @@ class TemplateEditorPage(QWidget):
             add_card = AddShiftCard()
 
             add_card.clicked.connect(lambda day=day: self.add_shift(day))
+            #shift_card.clicked.connect(lambda shift=shift: self.edit_shift(shift))
             layout.addWidget(add_card,0,Qt.AlignTop)
 
             layout.setAlignment(Qt.AlignTop)
@@ -218,3 +222,27 @@ class TemplateEditorPage(QWidget):
             scroll_content.setMinimumHeight(
                 required_height
             )
+
+    def add_shift(self, day):
+        if self.template is None:
+            return
+
+        self.shift_editor.set_shift(shift=None,day=day)
+        self.shift_editor.exec()
+
+    def save_new_shift(self, shift):
+        if self.template is None:
+            return
+
+        self.database.add_shift(
+            self.template.id,
+            shift.day_of_week,
+            shift.start_time,
+            shift.end_time,
+            shift.hours,
+            shift.location,
+            shift.rate
+        )
+
+        self.template.shifts = self.database.get_shifts(self.template.id)
+        self.load_shifts()
