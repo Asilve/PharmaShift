@@ -76,7 +76,8 @@ class TemplateEditorPage(QWidget):
         }
 
         # Shift Editor
-        self.shift_editor.saved.connect(self.save_new_shift)
+        self.shift_editor.saved.connect(self.save_shift)
+        self.shift_editor.deleted.connect(self.delete_shift)
 
         self.setup_scroll_contents()
 
@@ -196,19 +197,15 @@ class TemplateEditorPage(QWidget):
         for shift in self.template.shifts:
 
             shift_card = ShiftCard(shift)
+            shift_card.clicked.connect(self.edit_shift)
 
-            self.day_layouts[shift.day_of_week].addWidget(
-                shift_card,
-                0,
-                Qt.AlignTop
-            )
+            self.day_layouts[shift.day_of_week].addWidget(shift_card,0,Qt.AlignTop)
 
         # Update each scroll area's content height
         for day, layout in self.day_layouts.items():
             add_card = AddShiftCard()
 
             add_card.clicked.connect(lambda day=day: self.add_shift(day))
-            #shift_card.clicked.connect(lambda shift=shift: self.edit_shift(shift))
             layout.addWidget(add_card,0,Qt.AlignTop)
 
             layout.setAlignment(Qt.AlignTop)
@@ -230,19 +227,50 @@ class TemplateEditorPage(QWidget):
         self.shift_editor.set_shift(shift=None,day=day)
         self.shift_editor.exec()
 
-    def save_new_shift(self, shift):
+    def save_shift(self, shift):
         if self.template is None:
             return
 
-        self.database.add_shift(
-            self.template.id,
-            shift.day_of_week,
-            shift.start_time,
-            shift.end_time,
-            shift.hours,
-            shift.location,
-            shift.rate
-        )
+        if shift.id is None:
+            self.database.add_shift(
+                self.template.id,
+                shift.day_of_week,
+                shift.start_time,
+                shift.end_time,
+                shift.hours,
+                shift.location,
+                shift.rate
+            )
+
+        else:
+            self.database.update_shift(
+                shift.id,
+                shift.day_of_week,
+                shift.start_time,
+                shift.end_time,
+                shift.hours,
+                shift.location,
+                shift.rate
+            )
 
         self.template.shifts = self.database.get_shifts(self.template.id)
+        self.load_shifts()
+
+    def edit_shift(self, shift):
+        self.shift_editor.set_shift(
+            shift=shift
+        )
+
+        self.shift_editor.exec()
+
+    def delete_shift(self, shift):
+        if self.template is None:
+            return
+
+        self.database.delete_shift(shift.id)
+
+        self.template.shifts = self.database.get_shifts(
+            self.template.id
+        )
+
         self.load_shifts()

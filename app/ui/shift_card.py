@@ -6,7 +6,7 @@ from models.shift import Shift
 
 class ShiftCard(QWidget):
 
-    clicked = Signal()
+    clicked = Signal(object)
 
     def __init__(self, shift: Shift):
         super().__init__()
@@ -71,5 +71,5 @@ class ShiftCard(QWidget):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            self.clicked.emit()
+            self.clicked.emit(self.shift)
 
