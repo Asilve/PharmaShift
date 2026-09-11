@@ -10,17 +10,26 @@
     <height>80</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="minimumSize">
    <size>
-    <width>140</width>
+    <width>0</width>
     <height>80</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>168</width>
-    <height>80</height>
+    <width>16777215</width>
+    <height>16777215</height>
    </size>
+  </property>
+  <property name="cursor">
+   <cursorShape>PointingHandCursor</cursorShape>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -36,36 +45,32 @@
     border: 2px dashed #5F538D;
 }</string>
   </property>
-  <widget class="QLabel" name="add_shift_label">
-   <property name="geometry">
-    <rect>
-     <x>-2</x>
-     <y>10</y>
-     <width>171</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Arial Rounded MT</family>
-     <pointsize>13</pointsize>
-     <underline>false</underline>
-     <fontweight>DemiBold</fontweight>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">#add_shift_label {
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="add_shift_label">
+     <property name="font">
+      <font>
+       <family>Arial Rounded MT</family>
+       <pointsize>13</pointsize>
+       <underline>false</underline>
+       <fontweight>DemiBold</fontweight>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">#add_shift_label {
     color: #5F538D;
     font-weight: 600;
 }</string>
-   </property>
-   <property name="text">
-    <string>Add New Shift</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignmentFlag::AlignCenter</set>
-   </property>
-  </widget>
+     </property>
+     <property name="text">
+      <string>Add New Shift</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

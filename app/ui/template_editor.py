@@ -1,6 +1,10 @@
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLineEdit, QFrame, QColorDialog, QMessageBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLineEdit, QFrame, QColorDialog, QMessageBox, QLayout, QSizePolicy
+
+
+from ui.shift_card import ShiftCard
+from ui.add_shift_card import AddShiftCard
 
 
 class TemplateEditorPage(QWidget):
@@ -198,6 +202,10 @@ class TemplateEditorPage(QWidget):
 
         # Update each scroll area's content height
         for day, layout in self.day_layouts.items():
+            add_card = AddShiftCard()
+
+            add_card.clicked.connect(lambda day=day: self.add_shift(day))
+            layout.addWidget(add_card,0,Qt.AlignTop)
 
             layout.setAlignment(Qt.AlignTop)
             layout.invalidate()
