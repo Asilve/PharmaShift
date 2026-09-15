@@ -2,11 +2,14 @@ from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QMainWindow, QStackedWidget, QApplication
 
 from ui.home_page import HomePage
-from ui.generate_schedule import GenerateSchedulePage
+from ui.select_template import SelectTemplatePage
+from ui.select_date import SelectDatePage
+from ui.holiday_overview import HolidayOverviewPage
 from ui.manage_templates import ManageTemplatesPage
 from ui.manage_holidays import ManageHolidaysPage
 from ui.template_editor import TemplateEditorPage
 from models.template import EmployeeTemplate
+
 
 
 class MainWindow(QMainWindow):
@@ -27,29 +30,37 @@ class MainWindow(QMainWindow):
 
          # Create application pages
         self.home_page = HomePage()
-        self.generate_schedule_page = GenerateSchedulePage()
+        self.select_template_page = SelectTemplatePage()
+        self.select_date_page = SelectDatePage()
+        self.holiday_overview_page = HolidayOverviewPage()
         self.manage_templates_page = ManageTemplatesPage(self.database)
         self.manage_holidays_page = ManageHolidaysPage()
         self.template_editor_page = TemplateEditorPage(self.database)
 
         # Add pages to the application stack
         self.page_stack.addWidget(self.home_page)
-        self.page_stack.addWidget(self.generate_schedule_page)
+        self.page_stack.addWidget(self.select_template_page)
+        self.page_stack.addWidget(self.select_date_page)
+        self.page_stack.addWidget(self.holiday_overview_page)
         self.page_stack.addWidget(self.manage_templates_page)
         self.page_stack.addWidget(self.manage_holidays_page)
         self.page_stack.addWidget(self.template_editor_page)
 
         # Connect page signals to navigation
-        self.home_page.generate_schedule_clicked.connect(self.show_generate_schedule)
+        self.home_page.generate_schedule_clicked.connect(self.show_select_template)
         self.home_page.manage_templates_clicked.connect(self.show_manage_templates)
         self.home_page.manage_holidays_clicked.connect(self.show_manage_holidays)
+        self.select_template_page.continue_clicked.connect(self.show_select_dates)
+        self.select_date_page.continue_clicked.connect(self.show_holiday_overview)
         self.manage_templates_page.add_template_clicked.connect(self.show_add_new_template)
         self.manage_templates_page.edit_template_clicked.connect(self.show_edit_template)
 
         # Back buttons
-        self.generate_schedule_page.back_clicked.connect(self.show_home)
+        self.select_template_page.back_clicked.connect(self.show_home)
         self.manage_templates_page.back_clicked.connect(self.show_home)
         self.manage_holidays_page.back_clicked.connect(self.show_home)
+        self.select_date_page.back_clicked.connect(self.show_select_template)
+        self.holiday_overview_page.back_clicked.connect(self.show_select_dates)
         self.template_editor_page.back_clicked.connect(self.show_manage_templates)
 
         # Save Template
@@ -64,14 +75,20 @@ class MainWindow(QMainWindow):
     def show_home(self):
         self.page_stack.setCurrentWidget(self.home_page)
 
-    def show_generate_schedule(self):
-        self.page_stack.setCurrentWidget(self.generate_schedule_page)
+    def show_select_template(self):
+        self.page_stack.setCurrentWidget(self.select_template_page)
 
     def show_manage_templates(self):
         self.page_stack.setCurrentWidget(self.manage_templates_page)
 
     def show_manage_holidays(self):
         self.page_stack.setCurrentWidget(self.manage_holidays_page)
+
+    def show_select_dates(self):
+        self.page_stack.setCurrentWidget(self.select_date_page)
+
+    def show_holiday_overview(self):
+        self.page_stack.setCurrentWidget(self.holiday_overview_page)
     
     def show_add_new_template(self):
         template = EmployeeTemplate(name="",colour="#FFFFFF",notes="")

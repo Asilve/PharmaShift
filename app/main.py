@@ -1,4 +1,5 @@
 import sys
+import resources_rc
 from database.database import Database
 
 from PySide6.QtWidgets import QApplication

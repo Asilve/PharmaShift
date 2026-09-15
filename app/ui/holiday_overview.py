@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton
 from PySide6.QtUiTools import QUiLoader
 
 
-class GenerateSchedulePage(QWidget):
+class HolidayOverviewPage(QWidget):
 
     back_clicked = Signal()
 
@@ -11,7 +11,7 @@ class GenerateSchedulePage(QWidget):
         super().__init__()
 
         loader = QUiLoader()
-        self.ui = loader.load("ui_files/generate_schedule.ui", None)
+        self.ui = loader.load("ui_files/holiday_overview.ui", None)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -20,4 +20,3 @@ class GenerateSchedulePage(QWidget):
         self.back_button = self.ui.findChild(QPushButton,"back_button")
 
         self.back_button.clicked.connect(self.back_clicked.emit)
-    

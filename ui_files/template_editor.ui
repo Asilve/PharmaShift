@@ -33,7 +33,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">#Widget {
-    background-image: url(&quot;C:/Users/sinar/OneDrive/Documents/GitHub/PharmaShift/assets/background.png&quot;);
+	background-image: url(:/assets/background.png);
 }</string>
   </property>
   <widget class="QPushButton" name="back_button">
