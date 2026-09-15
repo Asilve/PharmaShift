@@ -28,9 +28,14 @@ class MainWindow(QMainWindow):
 
         self.page_stack = self.ui.findChild(QStackedWidget, "page_stack")
 
+        # Schedule generation state
+        self.selected_template = None
+        self.start_date = None
+        self.end_date = None
+
          # Create application pages
         self.home_page = HomePage()
-        self.select_template_page = SelectTemplatePage()
+        self.select_template_page = SelectTemplatePage(self.database)
         self.select_date_page = SelectDatePage()
         self.holiday_overview_page = HolidayOverviewPage()
         self.manage_templates_page = ManageTemplatesPage(self.database)
@@ -50,8 +55,8 @@ class MainWindow(QMainWindow):
         self.home_page.generate_schedule_clicked.connect(self.show_select_template)
         self.home_page.manage_templates_clicked.connect(self.show_manage_templates)
         self.home_page.manage_holidays_clicked.connect(self.show_manage_holidays)
-        self.select_template_page.continue_clicked.connect(self.show_select_dates)
-        self.select_date_page.continue_clicked.connect(self.show_holiday_overview)
+        self.select_template_page.continue_clicked.connect(self.template_selected)
+        self.select_date_page.continue_clicked.connect(self.dates_selected)
         self.manage_templates_page.add_template_clicked.connect(self.show_add_new_template)
         self.manage_templates_page.edit_template_clicked.connect(self.show_edit_template)
 
@@ -106,6 +111,15 @@ class MainWindow(QMainWindow):
     def template_saved(self):
         self.manage_templates_page.load_templates()
         self.show_manage_templates()
+
+    def template_selected(self, template):
+        self.selected_template = template
+        self.show_select_dates()
+
+    def dates_selected(self, start_date, end_date):
+        self.start_date = start_date
+        self.end_date = end_date
+        self.show_holiday_overview()
 
     def close_application(self):
         QApplication.quit()

@@ -127,9 +127,9 @@ QPushButton:pressed {
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>200</y>
+     <y>190</y>
      <width>1231</width>
-     <height>321</height>
+     <height>331</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -149,50 +149,32 @@ QPushButton:pressed {
      <number>25</number>
     </property>
     <item>
-     <widget class="QCalendarWidget" name="start_calendar">
+     <widget class="QFrame" name="start_calendar_container">
       <property name="styleSheet">
-       <string notr="true">QCalendarWidget {
-    background-color: white;    
-	border: 1px solid #D6D9DC;
-    border-radius: 10px;
-}
-
-/* Calendar header */
-QCalendarWidget QWidget#qt_calendar_navigationbar {
+       <string notr="true">#start_calendar_container,
+#end_calendar_container {
     background-color: #F4F7FA;
-    border-bottom: 1px solid #D7DEE5;
-}
-
-/* Month / year */
-QCalendarWidget QToolButton {
-    color: #263238;
-    background-color: transparent;
-    border: none;
-    font-weight: 600;
-    padding: 6px;
-}
-
-QCalendarWidget QToolButton:hover {
-    background-color: #E8EEF2;
-    border-radius: 5px;
-}
-
-/* Date grid */
-QCalendarWidget QAbstractItemView {
-    background-color: white;
-    color: #263238;
-    selection-background-color: #2F6F73;
-    selection-color: white;
-    border: none;
-    outline: none;
+    border: 1px solid #D6D9DC;
+    border-radius: 10px;
 }</string>
       </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QCalendarWidget" name="end_calendar">
-      <property name="styleSheet">
-       <string notr="true">QCalendarWidget {
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QCalendarWidget" name="start_calendar">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>521</width>
+         <height>261</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QCalendarWidget {
     background-color: white;
     border: 1px solid #D6D9DC;
     border-radius: 10px;
@@ -222,12 +204,111 @@ QCalendarWidget QToolButton:hover {
 QCalendarWidget QAbstractItemView {
     background-color: white;
     color: #263238;
-    selection-background-color: #2F6F73;
-    selection-color: white;
     border: none;
     outline: none;
+    selection-background-color: #2F6F73;
+    selection-color: white;
+}
+
+/* Date currently under the mouse */
+QCalendarWidget QAbstractItemView::item:hover {
+    background-color: #E8EEF2;
+    color: #263238;
+}
+
+/* Selected date */
+QCalendarWidget QAbstractItemView::item:selected {
+    background-color: #2F6F73;
+    color: white;
+}</string>
+       </property>
+       <property name="horizontalHeaderFormat">
+        <enum>QCalendarWidget::HorizontalHeaderFormat::ShortDayNames</enum>
+       </property>
+       <property name="verticalHeaderFormat">
+        <enum>QCalendarWidget::VerticalHeaderFormat::NoVerticalHeader</enum>
+       </property>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="end_calendar_container">
+      <property name="styleSheet">
+       <string notr="true">#start_calendar_container,
+#end_calendar_container {
+    background-color: #F4F7FA;
+    border: 1px solid #D6D9DC;
+    border-radius: 10px;
 }</string>
       </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QCalendarWidget" name="end_calendar">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>521</width>
+         <height>261</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QCalendarWidget {
+    background-color: white;
+    border: 1px solid #D6D9DC;
+    border-radius: 10px;
+}
+
+/* Calendar header */
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+    background-color: #F4F7FA;
+    border-bottom: 1px solid #D7DEE5;
+}
+
+/* Month / year */
+QCalendarWidget QToolButton {
+    color: #263238;
+    background-color: transparent;
+    border: none;
+    font-weight: 600;
+    padding: 6px;
+}
+
+QCalendarWidget QToolButton:hover {
+    background-color: #E8EEF2;
+    border-radius: 5px;
+}
+
+/* Date grid */
+QCalendarWidget QAbstractItemView {
+    background-color: white;
+    color: #263238;
+    border: none;
+    outline: none;
+    selection-background-color: #2F6F73;
+    selection-color: white;
+}
+
+/* Date currently under the mouse */
+QCalendarWidget QAbstractItemView::item:hover {
+    background-color: #E8EEF2;
+    color: #263238;
+}
+
+/* Selected date */
+QCalendarWidget QAbstractItemView::item:selected {
+    background-color: #2F6F73;
+    color: white;
+}</string>
+       </property>
+       <property name="verticalHeaderFormat">
+        <enum>QCalendarWidget::VerticalHeaderFormat::NoVerticalHeader</enum>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -283,7 +364,7 @@ QCalendarWidget QAbstractItemView {
     <rect>
      <x>70</x>
      <y>530</y>
-     <width>481</width>
+     <width>371</width>
      <height>141</height>
     </rect>
    </property>
@@ -313,12 +394,12 @@ QCalendarWidget QAbstractItemView {
 }</string>
       </property>
       <property name="text">
-       <string>Selected Period</string>
+       <string>Selected Period:</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="selected_range">
+     <widget class="QLabel" name="date_range_label">
       <property name="styleSheet">
        <string notr="true">QLabel {
     color: #3F494C;
@@ -332,7 +413,7 @@ QCalendarWidget QAbstractItemView {
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="selected_length">
+     <widget class="QLabel" name="days_label">
       <property name="styleSheet">
        <string notr="true">QLabel {
     color: #3F494C;
