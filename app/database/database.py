@@ -41,14 +41,17 @@ class Database:
 
     
     def add_template(self, name, notes, colour):
-        self.connection.execute(
+        cursor = self.connection.execute(
             """
             INSERT INTO templates (name, notes, colour)
             VALUES (?, ?, ?)
             """,
             (name, notes, colour)
         )
+
         self.connection.commit()
+
+        return cursor.lastrowid
 
     def get_templates(self):
         cursor = self.connection.execute(

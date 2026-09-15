@@ -6,6 +6,7 @@ from ui.generate_schedule import GenerateSchedulePage
 from ui.manage_templates import ManageTemplatesPage
 from ui.manage_holidays import ManageHolidaysPage
 from ui.template_editor import TemplateEditorPage
+from models.template import EmployeeTemplate
 
 
 class MainWindow(QMainWindow):
@@ -73,7 +74,8 @@ class MainWindow(QMainWindow):
         self.page_stack.setCurrentWidget(self.manage_holidays_page)
     
     def show_add_new_template(self):
-        self.template_editor_page.set_template(None)
+        template = EmployeeTemplate(name="",colour="#FFFFFF",notes="")
+        self.template_editor_page.set_template(template)
         self.page_stack.setCurrentWidget(self.template_editor_page)
 
     def show_edit_template(self, template):

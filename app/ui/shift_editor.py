@@ -237,11 +237,6 @@ class ShiftEditorDialog(QDialog):
             self.save_shift()
             return
 
-        if event.key() == Qt.Key_Escape:
-            self.cancel
-            event.accept()
-            return
-
         super().keyPressEvent(event)
 
     def cancel(self):

@@ -149,16 +149,41 @@ class TemplateEditorPage(QWidget):
             )
             return
 
-        if self.template is None:
-            # Add new template
-            self.database.add_template(
+        # New template
+        if self.template.id is None:
+
+            template_id = self.database.add_template(
                 name,
                 notes,
                 colour
             )
 
+            self.template.id = template_id
+            self.template.name = name
+            self.template.notes = notes
+            self.template.colour = colour
+
+            # Save all shifts that were created in memory
+            for shift in self.template.shifts:
+
+                self.database.add_shift(
+                    self.template.id,
+                    shift.day_of_week,
+                    shift.start_time,
+                    shift.end_time,
+                    shift.hours,
+                    shift.location,
+                    shift.rate
+                )
+
+            # Reload everything from the database
+            self.template = self.database.get_template(
+                self.template.id
+            )
+
+        # Existing template
         else:
-            # Update existing template
+
             self.database.update_template(
                 self.template.id,
                 name,
@@ -166,7 +191,6 @@ class TemplateEditorPage(QWidget):
                 colour
             )
 
-            # Update the in-memory template object
             self.template.name = name
             self.template.notes = notes
             self.template.colour = colour
@@ -190,23 +214,28 @@ class TemplateEditorPage(QWidget):
                 if widget is not None:
                     widget.deleteLater()
 
-        if self.template is None:
-            return
+        # Add existing shifts if editing an existing template
+        if self.template is not None:
 
-        # Add shift cards
-        for shift in self.template.shifts:
+            for shift in self.template.shifts:
+                shift_card = ShiftCard(shift)
+                shift_card.clicked.connect(self.edit_shift)
+                self.day_layouts[shift.day_of_week].addWidget(shift_card,0,Qt.AlignTop)
 
-            shift_card = ShiftCard(shift)
-            shift_card.clicked.connect(self.edit_shift)
-
-            self.day_layouts[shift.day_of_week].addWidget(shift_card,0,Qt.AlignTop)
-
-        # Update each scroll area's content height
+        # Add "Add New Shift" card to every day
         for day, layout in self.day_layouts.items():
+
             add_card = AddShiftCard()
 
-            add_card.clicked.connect(lambda day=day: self.add_shift(day))
-            layout.addWidget(add_card,0,Qt.AlignTop)
+            add_card.clicked.connect(
+                lambda day=day: self.add_shift(day)
+            )
+
+            layout.addWidget(
+                add_card,
+                0,
+                Qt.AlignTop
+            )
 
             layout.setAlignment(Qt.AlignTop)
             layout.invalidate()
@@ -221,9 +250,6 @@ class TemplateEditorPage(QWidget):
             )
 
     def add_shift(self, day):
-        if self.template is None:
-            return
-
         self.shift_editor.set_shift(shift=None,day=day)
         self.shift_editor.exec()
 
@@ -231,29 +257,51 @@ class TemplateEditorPage(QWidget):
         if self.template is None:
             return
 
-        if shift.id is None:
-            self.database.add_shift(
-                self.template.id,
-                shift.day_of_week,
-                shift.start_time,
-                shift.end_time,
-                shift.hours,
-                shift.location,
-                shift.rate
-            )
+        # New template: keep the shift in memory
+        if self.template.id is None:
 
+            # Editing an existing in-memory shift
+            if shift.id is not None:
+
+                for index, existing_shift in enumerate(self.template.shifts):
+
+                    if existing_shift.id == shift.id:
+                        self.template.shifts[index] = shift
+                        break
+
+            # Adding a new in-memory shift
+            else:
+                self.template.shifts.append(shift)
+
+        # Existing template: save directly to database
         else:
-            self.database.update_shift(
-                shift.id,
-                shift.day_of_week,
-                shift.start_time,
-                shift.end_time,
-                shift.hours,
-                shift.location,
-                shift.rate
-            )
 
-        self.template.shifts = self.database.get_shifts(self.template.id)
+            # New shift
+            if shift.id is None:
+                self.database.add_shift(
+                    self.template.id,
+                    shift.day_of_week,
+                    shift.start_time,
+                    shift.end_time,
+                    shift.hours,
+                    shift.location,
+                    shift.rate
+                )
+
+            # Existing shift
+            else:
+                self.database.update_shift(
+                    shift.id,
+                    shift.day_of_week,
+                    shift.start_time,
+                    shift.end_time,
+                    shift.hours,
+                    shift.location,
+                    shift.rate
+                )
+
+            self.template.shifts = self.database.get_shifts(self.template.id)
+
         self.load_shifts()
 
     def edit_shift(self, shift):
@@ -267,10 +315,24 @@ class TemplateEditorPage(QWidget):
         if self.template is None:
             return
 
-        self.database.delete_shift(shift.id)
+        # New template: remove from memory
+        if self.template.id is None:
 
-        self.template.shifts = self.database.get_shifts(
-            self.template.id
-        )
+            self.template.shifts = [
+                existing_shift
+                for existing_shift in self.template.shifts
+                if existing_shift is not shift
+            ]
+
+        # Existing template: delete from database
+        else:
+
+            self.database.delete_shift(
+                shift.id
+            )
+
+            self.template.shifts = self.database.get_shifts(
+                self.template.id
+            )
 
         self.load_shifts()
