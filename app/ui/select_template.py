@@ -56,6 +56,16 @@ class SelectTemplatePage(QWidget):
         self.load_templates()
 
     def load_templates(self):
+        # Remember which template was selected, if any
+        selected_template_id = (
+            self.selected_template.id
+            if self.selected_template is not None
+            else None
+        )
+
+        # Forget the old card before deleting it
+        self.selected_card = None
+
         self.clear_template_cards()
 
         templates = self.database.get_templates()
@@ -69,14 +79,31 @@ class SelectTemplatePage(QWidget):
             )
 
             card = TemplateCard(template)
-            card.clicked.connect(lambda checked=False, card=card:self.select_template(card))
-            self.template_list_layout.addWidget(card,0,Qt.AlignHCenter | Qt.AlignTop)
+
+            card.clicked.connect(
+                lambda checked=False, card=card:
+                self.select_template(card)
+            )
+
+            self.template_list_layout.addWidget(
+                card, 0, Qt.AlignHCenter | Qt.AlignTop
+            )
+
+            # Restore the previous selection
+            if template.id == selected_template_id:
+                self.selected_card = card
+                self.selected_template = template
+                card.set_selected(True)
 
         self.template_list_layout.invalidate()
         self.template_list_layout.activate()
 
         self.scroll_content.setMinimumHeight(
             self.template_list_layout.sizeHint().height()
+        )
+
+        self.continue_button.setEnabled(
+            self.selected_template is not None
         )
 
     def select_template(self, card):

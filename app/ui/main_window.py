@@ -81,6 +81,7 @@ class MainWindow(QMainWindow):
         self.page_stack.setCurrentWidget(self.home_page)
 
     def show_select_template(self):
+        self.select_template_page.load_templates()
         self.page_stack.setCurrentWidget(self.select_template_page)
 
     def show_manage_templates(self):

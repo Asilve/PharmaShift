@@ -5,6 +5,9 @@ from database.database import Database
 from PySide6.QtWidgets import QApplication
 from ui.main_window import MainWindow
 
+from services.schedule_generator import ScheduleGenerator
+from PySide6.QtCore import QDate
+
 
 def main():
     app = QApplication(sys.argv)
