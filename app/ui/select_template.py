@@ -113,7 +113,9 @@ class SelectTemplatePage(QWidget):
         self.selected_card = card
         self.selected_card.set_selected(True)
 
-        self.selected_template = card.template
+        self.selected_template = self.database.get_template(
+            card.template.id
+        )
 
         self.continue_button.setEnabled(True)
 

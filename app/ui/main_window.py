@@ -5,11 +5,13 @@ from ui.home_page import HomePage
 from ui.select_template import SelectTemplatePage
 from ui.select_date import SelectDatePage
 from ui.holiday_overview import HolidayOverviewPage
+from ui.schedule_preview import SchedulePreviewPage
 from ui.manage_templates import ManageTemplatesPage
 from ui.manage_holidays import ManageHolidaysPage
 from ui.template_editor import TemplateEditorPage
 from models.template import EmployeeTemplate
 
+from services.schedule_generator import ScheduleGenerator
 
 
 class MainWindow(QMainWindow):
@@ -38,6 +40,8 @@ class MainWindow(QMainWindow):
         self.select_template_page = SelectTemplatePage(self.database)
         self.select_date_page = SelectDatePage()
         self.holiday_overview_page = HolidayOverviewPage()
+        self.schedule_preview_page = SchedulePreviewPage()
+        self.schedule_generator = ScheduleGenerator()
         self.manage_templates_page = ManageTemplatesPage(self.database)
         self.manage_holidays_page = ManageHolidaysPage()
         self.template_editor_page = TemplateEditorPage(self.database)
@@ -47,6 +51,7 @@ class MainWindow(QMainWindow):
         self.page_stack.addWidget(self.select_template_page)
         self.page_stack.addWidget(self.select_date_page)
         self.page_stack.addWidget(self.holiday_overview_page)
+        self.page_stack.addWidget(self.schedule_preview_page)
         self.page_stack.addWidget(self.manage_templates_page)
         self.page_stack.addWidget(self.manage_holidays_page)
         self.page_stack.addWidget(self.template_editor_page)
@@ -66,6 +71,7 @@ class MainWindow(QMainWindow):
         self.manage_holidays_page.back_clicked.connect(self.show_home)
         self.select_date_page.back_clicked.connect(self.show_select_template)
         self.holiday_overview_page.back_clicked.connect(self.show_select_dates)
+        self.schedule_preview_page.back_clicked.connect(self.show_select_dates)
         self.template_editor_page.back_clicked.connect(self.show_manage_templates)
 
         # Save Template
@@ -120,7 +126,24 @@ class MainWindow(QMainWindow):
     def dates_selected(self, start_date, end_date):
         self.start_date = start_date
         self.end_date = end_date
-        self.show_holiday_overview()
+
+        template = self.selected_template
+
+        schedule = self.schedule_generator.generate(
+            template,
+            start_date,
+            end_date
+        )
+
+        self.schedule_preview_page.set_schedule(schedule)
+        self.schedule_preview_page.show_first_week()
+
+        self.show_schedule_preview()
+
+    def show_schedule_preview(self):
+        self.page_stack.setCurrentWidget(
+            self.schedule_preview_page
+        )
 
     def close_application(self):
         QApplication.quit()
