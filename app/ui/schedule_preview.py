@@ -1,6 +1,7 @@
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, Signal, QTimer
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLayout, QFrame, QHBoxLayout, QLabel
+from PySide6.QtWidgets import QWidget,QVBoxLayout,QPushButton,QLayout,QFrame,QHBoxLayout,QLabel,QSizePolicy, QApplication
+
 
 from ui.week_preview import WeekPreview
 from ui.schedule_header import ScheduleHeader
@@ -13,34 +14,24 @@ class SchedulePreviewPage(QWidget):
 
     def __init__(self):
         super().__init__()
-
         self.schedule = None
-
         loader = QUiLoader()
-        self.ui = loader.load("ui_files/schedule_preview.ui", None)
+        self.ui = loader.load("ui_files/schedule_preview.ui",None)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self.ui)
 
-        # Find widgets from Designer
         self.back_button = self.ui.findChild(QPushButton,"back_button")
         self.preview_content_layout = self.ui.findChild(QLayout,"preview_layout")
         self.preview_content = self.ui.findChild(QWidget,"preview_content")
+        self.preview_content_layout.setSizeConstraint(QLayout.SetMinimumSize)
+        self.preview_content.setMinimumWidth(1060)
+        self.preview_content.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        # Centre the A4 page horizontally
-        self.preview_content_layout.setAlignment(Qt.AlignHCenter)
+        self.preview_pages = []
 
-        # Preview Page
-        self.preview_page = PreviewPage()
-        self.preview_content_layout.addWidget(self.preview_page)
-
-        # Scrolling
-        self.preview_content.setMinimumHeight(767)
-
-        # Connect signals
         self.back_button.clicked.connect(self.back_clicked.emit)
-
 
     def set_schedule(self, schedule):
         self.schedule = schedule
@@ -48,29 +39,62 @@ class SchedulePreviewPage(QWidget):
     def show_first_week(self):
         if self.schedule is None:
             return
+        QTimer.singleShot(0, self._render_preview)
 
-        page_layout = self.preview_page.page_layout
-        header = ScheduleHeader(self.schedule)
-        page_layout.addWidget(header)
+    def _render_preview(self):
+        self.clear_preview()
+        QApplication.processEvents()
+        self.ui.preview_scroll_area.verticalScrollBar().setValue(0)
+        self.ui.preview_scroll_area.horizontalScrollBar().setValue(0)
+        weeks = []
 
         for i in range(0, len(self.schedule.days), 7):
             week_days = self.schedule.days[i:i + 7]
-            week_widget = WeekPreview(week_days, self.schedule.start_date, self.schedule.end_date)
-            page_layout.addWidget(week_widget)
+            week_widget = WeekPreview(
+                week_days,
+                self.schedule.start_date,
+                self.schedule.end_date
+            )
+            week_widget.adjustSize()
+            weeks.append(week_widget)
+
+        current_page = None
+        current_height = 0
+
+        for week_widget in weeks:
+            if current_page is None:
+                current_page = self.create_preview_page()
+                header = ScheduleHeader(self.schedule)
+                current_page.page_layout.addWidget(header,alignment=Qt.AlignTop)
+                current_height = header.sizeHint().height()
+
+            week_height = week_widget.sizeHint().height()
+            spacing = current_page.page_layout.spacing()
+            required_height = (current_height + spacing + week_height)
+
+            if required_height > current_page.available_height:
+                current_page = self.create_preview_page()
+                header = ScheduleHeader(self.schedule)
+                current_page.page_layout.addWidget(header,alignment=Qt.AlignTop)
+                current_height = header.sizeHint().height()
+                required_height = (current_height + current_page.page_layout.spacing() + week_height)
+
+            current_page.page_layout.addWidget(week_widget,alignment=Qt.AlignTop)
+            current_height = (current_height + current_page.page_layout.spacing() + week_height)
 
         period_summary = self.create_period_summary()
-        page_layout.addWidget(period_summary)
+        current_page.page_layout.addWidget(period_summary,alignment=Qt.AlignTop)
+        QTimer.singleShot(0, self._finalize_preview)
 
 
     def create_period_summary(self):
         summary = QFrame()
         summary.setObjectName("period_summary")
         summary_layout = QHBoxLayout(summary)
-        summary_layout.setContentsMargins(12, 10, 12, 10)
-        summary_layout.setSpacing(20)
-
+        summary_layout.setContentsMargins(10,5,10,5)
+        summary_layout.setSpacing(16)
+        summary.setFixedHeight(30)
         title_label = QLabel("Period Total")
-
         title_label.setStyleSheet("""
             QLabel {
                 color: #52636F;
@@ -113,8 +137,54 @@ class SchedulePreviewPage(QWidget):
 
         return summary
 
+    def create_preview_page(self):
+        page = PreviewPage()
+        self.preview_pages.append(page)
+        self.preview_content_layout.addWidget(
+            page,
+            alignment=Qt.AlignHCenter | Qt.AlignTop
+        )
+
+        return page
+
+    def clear_preview(self):
+        while self.preview_content_layout.count():
+
+            item = self.preview_content_layout.takeAt(0)
+
+            widget = item.widget()
+
+            if widget is not None:
+                widget.setParent(None)
+                widget.deleteLater()
+
+        self.preview_pages.clear()
+
+        self.preview_content_layout.invalidate()
+        self.preview_content_layout.activate()
+
+        self.preview_content.setMinimumSize(0, 0)
+        self.preview_content.resize(
+            self.ui.preview_scroll_area.viewport().width(),
+            self.ui.preview_scroll_area.viewport().height()
+        )
+        self.ui.preview_scroll_area.verticalScrollBar().setValue(0)
+        self.ui.preview_scroll_area.horizontalScrollBar().setValue(0)
+
+    def _finalize_preview(self):
+        self.preview_content_layout.invalidate()
+        self.preview_content_layout.activate()
+        content_size = self.preview_content_layout.sizeHint()
+        scroll_area_width = self.ui.preview_scroll_area.width()
+        content_width = max(scroll_area_width,content_size.width())
+        content_height = content_size.height()
+        self.preview_content.resize(content_width,content_height)
+        self.preview_content_layout.setGeometry(self.preview_content.rect())
+
+
     @staticmethod
     def format_hours(hours):
+
         if hours.is_integer():
             return f"{int(hours)} hours"
 

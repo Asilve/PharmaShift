@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QFrame, QSizePolicy
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QFrame, QSizePolicy, QLayout
 from PySide6.QtCore import Qt
 
 from ui.day_preview import DayPreview
@@ -15,9 +15,10 @@ class WeekPreview(QWidget):
         self.setup_ui()
 
     def setup_ui(self):
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(8)
+        layout.setSpacing(5)
 
         day_layout = QHBoxLayout()
         day_layout.setContentsMargins(0, 0, 0, 0)
@@ -28,7 +29,7 @@ class WeekPreview(QWidget):
         for day in self.days:
             day_widget = DayPreview(day, self.start_date, self.end_date)
             day_widget.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Preferred)
-            day_layout.addWidget(day_widget, 1)
+            day_layout.addWidget(day_widget)
 
         summary = self.create_weekly_summary()
         layout.addWidget(summary)
@@ -38,8 +39,10 @@ class WeekPreview(QWidget):
         summary.setObjectName("weekly_summary")
 
         summary_layout = QHBoxLayout(summary)
-        summary_layout.setContentsMargins(12, 8, 12, 8)
-        summary_layout.setSpacing(20)
+        summary_layout.setContentsMargins(10, 4, 10, 4)
+        summary_layout.setSpacing(16)
+        summary.setFixedHeight(28)
+        summary.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         title_label = QLabel("Weekly Total")
         title_label.setStyleSheet("""

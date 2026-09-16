@@ -98,4 +98,4 @@ class ScheduleHeader(QWidget):
         header_layout.addWidget(date_range_label)
 
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
-        self.setFixedHeight(55)
+        self.setFixedHeight(54)

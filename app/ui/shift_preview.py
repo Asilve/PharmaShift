@@ -15,14 +15,14 @@ class ShiftPreview(QWidget):
 
         frame_layout = QVBoxLayout(frame)
         frame_layout.setContentsMargins(4, 4, 4, 4)
-        frame_layout.setSpacing(4)
+        frame_layout.setSpacing(2)
 
         name_label = QLabel(self.shift.location)
         name_label.setWordWrap(True)
         name_label.setStyleSheet("""
             QLabel {
                 color: #263238;
-                font-size: 14px;
+                font-size: 11px;
                 font-weight: 600;
             }
         """)
@@ -40,7 +40,7 @@ class ShiftPreview(QWidget):
             time_label.setStyleSheet("""
                 QLabel {
                     color: #52636F;
-                    font-size: 10px;
+                    font-size: 9px;
                 }
             """)
 
@@ -61,14 +61,14 @@ class ShiftPreview(QWidget):
         hours_label.setStyleSheet("""
             QLabel {
                 color: #52636F;
-                font-size: 10px;
+                font-size: 9px;
             }
         """)
 
         rate_label.setStyleSheet("""
             QLabel {
                 color: #52636F;
-                font-size: 10px;
+                font-size: 9px;
             }
         """)
 
@@ -89,7 +89,7 @@ class ShiftPreview(QWidget):
         pay_label.setStyleSheet("""
             QLabel {
                 color: #263238;
-                font-size: 11px;
+                font-size: 10px;
                 font-weight: 600;
             }
         """)

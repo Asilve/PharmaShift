@@ -176,7 +176,7 @@ QPushButton:pressed {
        <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
       </property>
       <property name="widgetResizable">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <widget class="QWidget" name="preview_content">
        <property name="geometry">

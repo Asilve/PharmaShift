@@ -17,8 +17,10 @@ class PreviewPage(QWidget):
 
         self.page_frame = QFrame()
         self.page_frame.setObjectName("page_frame")
+        self.setFixedSize(1000, 707)
+
         self.page_frame.setFixedSize(1000, 707)
-        self.page_frame.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed)
+        self.page_frame.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         self.page_frame.setStyleSheet("""
             #page_frame {
@@ -30,8 +32,19 @@ class PreviewPage(QWidget):
         self.page_layout = QVBoxLayout(self.page_frame)
         self.page_layout.setContentsMargins(20, 20, 20, 20)
         self.page_layout.setSpacing(10)
+        self.page_layout.setAlignment(Qt.AlignTop)
 
         layout.addWidget(
             self.page_frame,
             alignment=Qt.AlignHCenter
+        )
+
+    def required_height(self, widget):
+        return widget.sizeHint().height()
+
+    @property
+    def available_height(self):
+        return self.page_frame.height() - (
+            self.page_layout.contentsMargins().top()
+            + self.page_layout.contentsMargins().bottom()
         )

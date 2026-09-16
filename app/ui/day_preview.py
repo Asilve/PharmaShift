@@ -24,11 +24,11 @@ class DayPreview(QWidget):
         layout.setSpacing(0)
 
         header = QFrame()
-        header.setFixedHeight(42)
+        header.setFixedHeight(38)
 
         header_layout = QVBoxLayout(header)
         header_layout.setContentsMargins(2, 2, 2, 2)
-        header_layout.setSpacing(2)
+        header_layout.setSpacing(1)
 
         day_label = QLabel(self.day.date.toString("ddd").upper())
         date_label = QLabel(self.day.date.toString("d MMM"))
@@ -39,7 +39,7 @@ class DayPreview(QWidget):
         day_label.setStyleSheet("""
             QLabel {
                 color: #52636F;
-                font-size: 10px;
+                font-size: 9px;
                 font-weight: 600;
             }
         """)
@@ -47,7 +47,7 @@ class DayPreview(QWidget):
         date_label.setStyleSheet("""
             QLabel {
                 color: #263238;
-                font-size: 14px;
+                font-size: 12px;
                 font-weight: 600;
             }
         """)
@@ -56,7 +56,7 @@ class DayPreview(QWidget):
         header_layout.addWidget(date_label)
 
         shift_area = QFrame()
-        shift_area.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding)
+        shift_area.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Preferred)
         shift_layout = QVBoxLayout(shift_area)
         shift_layout.setContentsMargins(6, 6, 6, 6)
         shift_layout.setSpacing(6)
@@ -68,7 +68,7 @@ class DayPreview(QWidget):
 
         summary = QFrame()
         summary.setObjectName("day_summary")
-        summary.setFixedHeight(50)
+        summary.setFixedHeight(36)
 
         summary_layout = QVBoxLayout(summary)
         summary_layout.setContentsMargins(6, 4, 6, 4)
@@ -113,7 +113,7 @@ class DayPreview(QWidget):
             summary_layout.addWidget(summary_label)
 
         layout.addWidget(header)
-        layout.addWidget(shift_area, 1)
+        layout.addWidget(shift_area)
         layout.addWidget(summary)
 
         header.setObjectName("day_header")
@@ -144,11 +144,12 @@ class DayPreview(QWidget):
         layout.setSpacing(0)
 
         header = QFrame()
+        header.setFixedHeight(38)
         header.setObjectName("day_header")
 
         header_layout = QVBoxLayout(header)
         header_layout.setContentsMargins(2, 2, 2, 2)
-        header_layout.setSpacing(2)
+        header_layout.setSpacing(1)
 
         day_label = QLabel(
             self.day.date.toString("ddd").upper()
@@ -164,7 +165,7 @@ class DayPreview(QWidget):
         day_label.setStyleSheet("""
             QLabel {
                 color: #B0B7BC;
-                font-size: 10px;
+                font-size: 9px;
                 font-weight: 600;
             }
         """)
@@ -172,7 +173,7 @@ class DayPreview(QWidget):
         date_label.setStyleSheet("""
             QLabel {
                 color: #B0B7BC;
-                font-size: 14px;
+                font-size: 12px;
                 font-weight: 600;
             }
         """)
@@ -187,8 +188,10 @@ class DayPreview(QWidget):
         summary.setObjectName("day_summary")
         summary.setFixedHeight(50)
 
+        empty_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+
         layout.addWidget(header)
-        layout.addWidget(empty_area, 1)
+        layout.addWidget(empty_area)
         layout.addWidget(summary)
 
         self.setStyleSheet("""
