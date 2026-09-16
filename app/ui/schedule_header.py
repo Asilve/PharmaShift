@@ -25,8 +25,8 @@ class ScheduleHeader(QWidget):
         """)
 
         header_layout = QHBoxLayout(header_frame)
-        header_layout.setContentsMargins(12, 8, 12, 8)
-        header_layout.setSpacing(12)
+        header_layout.setContentsMargins(8, 6, 8, 6)
+        header_layout.setSpacing(8)
 
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -54,7 +54,7 @@ class ScheduleHeader(QWidget):
         name_label.setStyleSheet("""
             QLabel {
                 color: #263238;
-                font-size: 20px;
+                font-size: 18px;
                 font-weight: 700;
             }
         """)
@@ -98,4 +98,4 @@ class ScheduleHeader(QWidget):
         header_layout.addWidget(date_range_label)
 
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
-        self.setFixedHeight(65)
+        self.setFixedHeight(55)

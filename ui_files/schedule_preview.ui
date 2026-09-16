@@ -220,67 +220,6 @@ QPushButton:pressed {
          <property name="bottomMargin">
           <number>30</number>
          </property>
-         <item>
-          <widget class="QFrame" name="page_frame">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>1000</width>
-             <height>707</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>1000</width>
-             <height>707</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">#page_frame {
-    background-color: white;
-    border: 1px solid #C8C8C8;
-}</string>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Shape::NoFrame</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Shadow::Plain</enum>
-           </property>
-           <widget class="QWidget" name="verticalLayoutWidget_3">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>10</y>
-              <width>981</width>
-              <height>681</height>
-             </rect>
-            </property>
-            <layout class="QVBoxLayout" name="page_layout">
-             <property name="spacing">
-              <number>10</number>
-             </property>
-             <property name="leftMargin">
-              <number>20</number>
-             </property>
-             <property name="topMargin">
-              <number>20</number>
-             </property>
-             <property name="rightMargin">
-              <number>20</number>
-             </property>
-             <property name="bottomMargin">
-              <number>20</number>
-             </property>
-            </layout>
-           </widget>
-          </widget>
-         </item>
         </layout>
        </widget>
       </widget>

@@ -5,9 +5,13 @@ from ui.day_preview import DayPreview
 
 class WeekPreview(QWidget):
 
-    def __init__(self, days):
+    def __init__(self, days, start_date, end_date):
         super().__init__()
+
         self.days = days
+        self.start_date = start_date
+        self.end_date = end_date
+
         self.setup_ui()
 
     def setup_ui(self):
@@ -22,8 +26,9 @@ class WeekPreview(QWidget):
         layout.addLayout(day_layout)
 
         for day in self.days:
-            day_widget = DayPreview(day)
-            day_layout.addWidget(day_widget)
+            day_widget = DayPreview(day, self.start_date, self.end_date)
+            day_widget.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Preferred)
+            day_layout.addWidget(day_widget, 1)
 
         summary = self.create_weekly_summary()
         layout.addWidget(summary)

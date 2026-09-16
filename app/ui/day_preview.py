@@ -5,25 +5,32 @@ from ui.shift_preview import ShiftPreview
 
 class DayPreview(QWidget):
 
-    def __init__(self, day):
+    def __init__(self, day, start_date, end_date):
         super().__init__()
         self.day = day
+        self.start_date = start_date
+        self.end_date = end_date
+        self.in_period = (self.start_date <= self.day.date <= self.end_date)
+
         self.setup_ui()
 
     def setup_ui(self):
+        if not self.in_period:
+            self.create_outside_period_ui()
+            return
+
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
         header = QFrame()
-        header.setFixedHeight(65)
+        header.setFixedHeight(42)
 
         header_layout = QVBoxLayout(header)
-        header_layout.setContentsMargins(6, 6, 6, 6)
+        header_layout.setContentsMargins(2, 2, 2, 2)
         header_layout.setSpacing(2)
 
         day_label = QLabel(self.day.date.toString("ddd").upper())
-
         date_label = QLabel(self.day.date.toString("d MMM"))
 
         day_label.setAlignment(Qt.AlignCenter)
@@ -32,7 +39,7 @@ class DayPreview(QWidget):
         day_label.setStyleSheet("""
             QLabel {
                 color: #52636F;
-                font-size: 11px;
+                font-size: 10px;
                 font-weight: 600;
             }
         """)
@@ -40,7 +47,7 @@ class DayPreview(QWidget):
         date_label.setStyleSheet("""
             QLabel {
                 color: #263238;
-                font-size: 16px;
+                font-size: 14px;
                 font-weight: 600;
             }
         """)
@@ -128,6 +135,77 @@ class DayPreview(QWidget):
             #day_summary {
                 background-color: white;
                 border: 1px solid #D7DEE5;
+            }
+        """)
+
+    def create_outside_period_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
+
+        header = QFrame()
+        header.setObjectName("day_header")
+
+        header_layout = QVBoxLayout(header)
+        header_layout.setContentsMargins(2, 2, 2, 2)
+        header_layout.setSpacing(2)
+
+        day_label = QLabel(
+            self.day.date.toString("ddd").upper()
+        )
+
+        date_label = QLabel(
+            self.day.date.toString("d MMM")
+        )
+
+        day_label.setAlignment(Qt.AlignCenter)
+        date_label.setAlignment(Qt.AlignCenter)
+
+        day_label.setStyleSheet("""
+            QLabel {
+                color: #B0B7BC;
+                font-size: 10px;
+                font-weight: 600;
+            }
+        """)
+
+        date_label.setStyleSheet("""
+            QLabel {
+                color: #B0B7BC;
+                font-size: 14px;
+                font-weight: 600;
+            }
+        """)
+
+        header_layout.addWidget(day_label)
+        header_layout.addWidget(date_label)
+
+        empty_area = QFrame()
+        empty_area.setObjectName("outside_period")
+
+        summary = QFrame()
+        summary.setObjectName("day_summary")
+        summary.setFixedHeight(50)
+
+        layout.addWidget(header)
+        layout.addWidget(empty_area, 1)
+        layout.addWidget(summary)
+
+        self.setStyleSheet("""
+            #day_header {
+                background-color: #F5F5F5;
+                border: 1px solid #E1E1E1;
+            }
+
+            #outside_period {
+                background-color: #F5F5F5;
+                border-left: 1px solid #E1E1E1;
+                border-right: 1px solid #E1E1E1;
+            }
+
+            #day_summary {
+                background-color: #F5F5F5;
+                border: 1px solid #E1E1E1;
             }
         """)
 

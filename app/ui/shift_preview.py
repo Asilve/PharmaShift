@@ -14,17 +14,15 @@ class ShiftPreview(QWidget):
         frame.setObjectName("shift_frame")
 
         frame_layout = QVBoxLayout(frame)
-        frame_layout.setContentsMargins(8, 8, 8, 8)
+        frame_layout.setContentsMargins(4, 4, 4, 4)
         frame_layout.setSpacing(4)
 
-        name_label = QLabel(
-            self.shift.location
-        )
+        name_label = QLabel(self.shift.location)
         name_label.setWordWrap(True)
         name_label.setStyleSheet("""
             QLabel {
                 color: #263238;
-                font-size: 12px;
+                font-size: 14px;
                 font-weight: 600;
             }
         """)
@@ -35,7 +33,7 @@ class ShiftPreview(QWidget):
             and self.shift.end_time is not None
         ):
             time_label = QLabel(
-                f"{self.shift.start_time} – "
+                f"{self.shift.start_time} - "
                 f"{self.shift.end_time}"
             )
 
