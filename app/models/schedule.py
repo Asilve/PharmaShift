@@ -1,5 +1,6 @@
 class Schedule:
-    def __init__(self, template, start_date, end_date):
+    def __init__(self, template, start_date, end_date, schedule_id=None):
+        self.id = schedule_id
         self.template = template
         self.start_date = start_date
         self.end_date = end_date

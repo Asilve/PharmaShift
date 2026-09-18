@@ -333,6 +333,50 @@ QPushButton:pressed {
      </widget>
     </item>
     <item>
+     <widget class="QPushButton" name="saved_schedule_button">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>250</width>
+        <height>70</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>Arial Black</family>
+        <pointsize>18</pointsize>
+        <fontweight>DemiBold</fontweight>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+    background-color: #545454;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+}
+
+QPushButton:hover {
+    background-color: #3D8589;
+}
+
+QPushButton:pressed {
+    background-color: #24585B;
+}</string>
+      </property>
+      <property name="text">
+       <string>Saved Schedules</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QPushButton" name="templates_button">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">

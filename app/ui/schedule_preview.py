@@ -11,6 +11,7 @@ from ui.preview_page import PreviewPage
 class SchedulePreviewPage(QWidget):
 
     back_clicked = Signal()
+    save_requested = Signal()
 
     def __init__(self):
         super().__init__()
@@ -23,6 +24,7 @@ class SchedulePreviewPage(QWidget):
         layout.addWidget(self.ui)
 
         self.back_button = self.ui.findChild(QPushButton,"back_button")
+        self.save_button = self.ui.findChild(QPushButton,"save_button")
         self.preview_content_layout = self.ui.findChild(QLayout,"preview_layout")
         self.preview_content = self.ui.findChild(QWidget,"preview_content")
         self.preview_content_layout.setSizeConstraint(QLayout.SetMinimumSize)
@@ -32,6 +34,7 @@ class SchedulePreviewPage(QWidget):
         self.preview_pages = []
 
         self.back_button.clicked.connect(self.back_clicked.emit)
+        self.ui.save_button.clicked.connect(self.save_requested.emit)
 
     def set_schedule(self, schedule):
         self.schedule = schedule

@@ -212,21 +212,24 @@ QPushButton:pressed {
    </property>
    <property name="styleSheet">
     <string notr="true">QPushButton {
-    background-color: #545454;
-    color: white;
-    border: none;
+    background-color: #3B4E53;
+    color: #FFFFFF;
+    border: 1px solid #CCCCCC;
     border-radius: 8px;
-    padding: 10px 20px;
-    font-weight: 600;
+    padding: 8px 18px;
 }
 
 QPushButton:hover {
     background-color: #3D8589;
 }
-
-QPushButton:pressed {
-    background-color: #24585B;
-}</string>
+QPushButton:disabled {
+    background-color: #7F7F7F;
+    color: #C3C3C3;
+    border: 1px solid #CCCCCC;
+    border-radius: 8px;
+    padding: 8px 18px;
+}
+</string>
    </property>
    <property name="text">
     <string>Continue</string>

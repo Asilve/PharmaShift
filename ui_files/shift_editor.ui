@@ -996,7 +996,7 @@ QDoubleSpinBox::down-button {
           <string> hours</string>
          </property>
          <property name="decimals">
-          <number>1</number>
+          <number>2</number>
          </property>
          <property name="maximum">
           <double>24.000000000000000</double>

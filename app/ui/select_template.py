@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, Signal, QEvent
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLayout, QSizePolicy
 from PySide6.QtUiTools import QUiLoader
 
@@ -26,6 +26,10 @@ class SelectTemplatePage(QWidget):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self.ui)
+
+        self.installEventFilter(self)
+        self.ui.installEventFilter(self)
+        self.ui.scrollArea.viewport().installEventFilter(self)
 
         # Back Button
         self.back_button = self.ui.findChild(QPushButton, "back_button")
@@ -133,3 +137,21 @@ class SelectTemplatePage(QWidget):
 
             if widget is not None:
                 widget.deleteLater()
+
+    def clear_selection(self):
+        if self.selected_card is not None:
+            self.selected_card.set_selected(False)
+            self.selected_card = None
+        self.continue_button.setEnabled(False)
+
+
+    def mousePressEvent(self, event):
+        self.clear_selection()
+        super().mousePressEvent(event)
+
+    def eventFilter(self, watched, event):
+        if event.type() == QEvent.MouseButtonPress:
+            if watched == self.ui.scrollArea.viewport():
+                self.clear_selection()
+
+        return super().eventFilter(watched, event)
