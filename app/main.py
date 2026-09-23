@@ -6,6 +6,7 @@ from PySide6.QtWidgets import QApplication
 from ui.main_window import MainWindow
 
 from PySide6.QtCore import QDate
+from services.schedule_pdf_exporter import SchedulePdfExporter
 
 
 def main():
