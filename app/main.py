@@ -15,18 +15,6 @@ def main():
     database = Database()
     database.create_tables()
 
-    saved_schedules = database.get_saved_schedules()
-
-    for schedule in saved_schedules:
-        print(schedule[0], schedule[1])
-
-    exporter = SchedulePdfExporter()
-
-    exporter.export(
-    database.load_schedule(8),
-    "test_schedule.pdf"
-)
-
     window = MainWindow(database)
     window.show()
 

@@ -158,6 +158,50 @@ QPushButton:pressed {
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="export_pdf_button">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>120</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>120</width>
+            <height>40</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    background-color: #F4F7FA;
+    border: 1px solid #D7DEE5;
+    border-radius: 6px;
+    color: #263238;
+    font-weight: 600;
+    padding: 6px 14px;
+}
+
+QPushButton:hover {
+    background-color: #E8EEF2;
+    border: 1px solid #2F6F73;
+}
+
+QPushButton:pressed {
+    background-color: #DDE5E9;
+}</string>
+          </property>
+          <property name="text">
+           <string>Export PDF</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="save_button">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">

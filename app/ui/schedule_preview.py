@@ -1,11 +1,13 @@
 from PySide6.QtCore import Qt, Signal, QTimer
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QWidget,QVBoxLayout,QPushButton,QLayout,QFrame,QHBoxLayout,QLabel,QSizePolicy, QApplication
+from PySide6.QtWidgets import QWidget,QVBoxLayout,QPushButton,QLayout,QFrame,QHBoxLayout,QLabel,QSizePolicy, QApplication, QFileDialog, QMessageBox
 
 
 from ui.week_preview import WeekPreview
 from ui.schedule_header import ScheduleHeader
 from ui.preview_page import PreviewPage
+
+from services.schedule_pdf_exporter import SchedulePdfExporter
 
 
 class SchedulePreviewPage(QWidget):
@@ -25,6 +27,7 @@ class SchedulePreviewPage(QWidget):
 
         self.back_button = self.ui.findChild(QPushButton,"back_button")
         self.save_button = self.ui.findChild(QPushButton,"save_button")
+        self.export_pdf_button = self.ui.findChild(QPushButton,"export_pdf_button")
         self.preview_content_layout = self.ui.findChild(QLayout,"preview_layout")
         self.preview_content = self.ui.findChild(QWidget,"preview_content")
         self.preview_content_layout.setSizeConstraint(QLayout.SetMinimumSize)
@@ -35,6 +38,7 @@ class SchedulePreviewPage(QWidget):
 
         self.back_button.clicked.connect(self.back_clicked.emit)
         self.ui.save_button.clicked.connect(self.save_requested.emit)
+        self.export_pdf_button.clicked.connect(self.export_pdf)
 
     def set_schedule(self, schedule):
         self.schedule = schedule
@@ -183,6 +187,29 @@ class SchedulePreviewPage(QWidget):
         content_height = content_size.height()
         self.preview_content.resize(content_width,content_height)
         self.preview_content_layout.setGeometry(self.preview_content.rect())
+
+    def export_pdf(self):
+        if self.schedule is None:
+            return
+
+        default_name = (
+            f"{self.schedule.template.name} "
+            f"{self.schedule.start_date.toString('dd_MM')} - "
+            f"{self.schedule.end_date.toString('dd_MM')}.pdf"
+        )
+
+        file_path, _ = QFileDialog.getSaveFileName(self,"Export Schedule as PDF",default_name,"PDF Files (*.pdf)")
+
+        # User cancelled the save dialog
+        if not file_path:
+            return
+        try:
+            exporter = SchedulePdfExporter()
+            exporter.export(self.schedule,file_path)
+        except Exception as e:
+            QMessageBox.critical(self,"PDF Export Failed",f"Could not create the PDF.\n\n{e}")
+            return
+        QMessageBox.information(self,"PDF Exported",f"Schedule exported successfully.\n\n"f"Saved to:\n{file_path}")
 
 
     @staticmethod
