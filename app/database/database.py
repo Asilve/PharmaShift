@@ -4,6 +4,7 @@ from models.shift import Shift
 from models.template import EmployeeTemplate
 from models.schedule import Schedule
 from models.day import Day
+from models.holiday import Holiday
 
 
 class Database:
@@ -19,6 +20,23 @@ class Database:
                 name TEXT NOT NULL,
                 colour TEXT NOT NULL,
                 notes TEXT NOT NULL DEFAULT ''
+            )
+        """)
+
+        self.connection.execute("""
+            CREATE TABLE IF NOT EXISTS holidays (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                template_id INTEGER NOT NULL,
+                start_date TEXT NOT NULL,
+                end_date TEXT NOT NULL,
+                start_time TEXT,
+                end_time TEXT,
+                covered INTEGER NOT NULL DEFAULT 0,
+                covered_by TEXT,
+
+                FOREIGN KEY (template_id)
+                    REFERENCES templates(id)
+                    ON DELETE CASCADE
             )
         """)
 
@@ -549,3 +567,141 @@ class Database:
             date_string,
             "yyyy-MM-dd"
         )
+
+    def add_holiday(self,template_id,start_date,end_date,start_time=None,end_time=None,covered=False,covered_by=None):
+        cursor = self.connection.execute(
+            """
+            INSERT INTO holidays (
+                template_id,
+                start_date,
+                end_date,
+                start_time,
+                end_time,
+                covered,
+                covered_by
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                template_id,
+                start_date.toString("yyyy-MM-dd"),
+                end_date.toString("yyyy-MM-dd"),
+                start_time,
+                end_time,
+                int(covered),
+                covered_by
+            )
+        )
+        self.connection.commit()
+        return cursor.lastrowid
+
+    def get_holidays(self, template_id):
+        cursor = self.connection.execute(
+            """
+            SELECT
+                id,
+                template_id,
+                start_date,
+                end_date,
+                start_time,
+                end_time,
+                covered,
+                covered_by
+            FROM holidays
+            WHERE template_id = ?
+            ORDER BY start_date, start_time
+            """,
+            (template_id,)
+        )
+
+        holidays = []
+
+        for row in cursor.fetchall():
+            holiday = Holiday(
+                template_id=row[1],
+                start_date=self._date_from_string(row[2]),
+                end_date=self._date_from_string(row[3]),
+                start_time=row[4],
+                end_time=row[5],
+                covered=bool(row[6]),
+                covered_by=row[7],
+                holiday_id=row[0]
+            )
+
+            holidays.append(holiday)
+
+        return holidays
+
+
+    def get_holiday(self, holiday_id):
+        cursor = self.connection.execute(
+            """
+            SELECT
+                id,
+                template_id,
+                start_date,
+                end_date,
+                start_time,
+                end_time,
+                covered,
+                covered_by
+            FROM holidays
+            WHERE id = ?
+            """,
+            (holiday_id,)
+        )
+
+        row = cursor.fetchone()
+
+        if row is None:
+            return None
+
+        return Holiday(
+            template_id=row[1],
+            start_date=self._date_from_string(row[2]),
+            end_date=self._date_from_string(row[3]),
+            start_time=row[4],
+            end_time=row[5],
+            covered=bool(row[6]),
+            covered_by=row[7],
+            holiday_id=row[0]
+        )
+
+    def update_holiday(self,holiday_id,template_id,start_date,end_date,start_time=None,end_time=None,covered=False,covered_by=None):
+        self.connection.execute(
+            """
+            UPDATE holidays
+            SET
+                template_id = ?,
+                start_date = ?,
+                end_date = ?,
+                start_time = ?,
+                end_time = ?,
+                covered = ?,
+                covered_by = ?
+            WHERE id = ?
+            """,
+            (
+                template_id,
+                start_date.toString("yyyy-MM-dd"),
+                end_date.toString("yyyy-MM-dd"),
+                start_time,
+                end_time,
+                int(covered),
+                covered_by,
+                holiday_id
+            )
+        )
+
+        self.connection.commit()
+
+    def delete_holiday(self, holiday_id):
+        self.connection.execute(
+            """
+            DELETE FROM holidays
+            WHERE id = ?
+            """,
+            (holiday_id,)
+        )
+
+        self.connection.commit()
