@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1280</width>
-    <height>815</height>
+    <height>720</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -78,6 +78,348 @@ QPushButton:pressed {
    </property>
    <property name="text">
     <string>Back</string>
+   </property>
+  </widget>
+  <widget class="QFrame" name="filter_frame">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>119</y>
+     <width>1201</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame#filter_frame {
+    background-color: #FFFFFF;
+    border: 1px solid #D7DEE5;
+    border-radius: 8px;
+}
+QLabel#employee_label,
+QLabel#from_label,
+QLabel#to_label {
+    color: #52636F;
+    font-size: 11px;
+    font-weight: 600;
+    background-color: transparent;
+    border: none;
+}
+QComboBox#employee_combo {
+    background-color: #FFFFFF;
+    color: #263238;
+    border: 1px solid #BFC9D1;
+    border-radius: 6px;
+    padding: 5px 8px;
+    min-height: 28px;
+}
+
+QComboBox#employee_combo:hover {
+    border: 1px solid #9AAAB5;
+}
+
+QComboBox#employee_combo:focus {
+    border: 1px solid #71808A;
+}
+
+QComboBox#employee_combo QAbstractItemView {
+    background-color: #FFFFFF;
+    color: #263238;
+    border: 1px solid #BFC9D1;
+    selection-background-color: #E9EEF2;
+    selection-color: #263238;
+}
+QDateEdit#from_date_edit,
+QDateEdit#to_date_edit {
+    background-color: #FFFFFF;
+    color: #263238;
+    border: 1px solid #BFC9D1;
+    border-radius: 6px;
+    padding: 5px 8px;
+    min-height: 28px;
+}
+
+QDateEdit#from_date_edit:hover,
+QDateEdit#to_date_edit:hover {
+    border: 1px solid #9AAAB5;
+}
+
+QDateEdit#from_date_edit:focus,
+QDateEdit#to_date_edit:focus {
+    border: 1px solid #71808A;
+}
+QDateEdit::up-button {
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+    width: 22px;
+}
+
+QDateEdit::down-button {
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+    width: 22px;
+}
+
+QPushButton#clear_button {
+    background-color: #F4F7FA;
+    color: #52636F;
+    border: 1px solid #D7DEE5;
+    border-radius: 6px;
+    padding: 5px 12px;
+    min-height: 28px;
+}
+
+QPushButton#clear_button:hover {
+    background-color: #E9EEF2;
+}
+
+QPushButton#clear_button:pressed {
+    background-color: #DDE4E9;
+}</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Shape::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Shadow::Raised</enum>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>25</number>
+    </property>
+    <property name="leftMargin">
+     <number>10</number>
+    </property>
+    <property name="topMargin">
+     <number>10</number>
+    </property>
+    <property name="rightMargin">
+     <number>10</number>
+    </property>
+    <property name="bottomMargin">
+     <number>10</number>
+    </property>
+    <item>
+     <widget class="QLabel" name="employee_label">
+      <property name="minimumSize">
+       <size>
+        <width>70</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>70</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Employee:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="employee_combo"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="from_label">
+      <property name="minimumSize">
+       <size>
+        <width>50</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>50</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>From:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QDateEdit" name="from_date_edit">
+      <property name="calendarPopup">
+       <bool>true</bool>
+      </property>
+      <property name="date">
+       <date>
+        <year>2026</year>
+        <month>1</month>
+        <day>1</day>
+       </date>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="to_label">
+      <property name="minimumSize">
+       <size>
+        <width>50</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>50</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>To:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QDateEdit" name="to_date_edit">
+      <property name="calendarPopup">
+       <bool>true</bool>
+      </property>
+      <property name="date">
+       <date>
+        <year>2027</year>
+        <month>1</month>
+        <day>1</day>
+       </date>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="clear_button">
+      <property name="text">
+       <string>Clear</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QScrollArea" name="holiday_scroll_area">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>200</y>
+     <width>1241</width>
+     <height>411</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QScrollArea {
+    background-color: #F5F5F5;
+    border: 2px solid #D0D0D0;
+    border-radius: 12px;
+}
+
+QScrollArea &gt; QWidget &gt; QWidget {
+    background-color: transparent;
+}
+QScrollBar:vertical {
+    background: transparent;
+    width: 10px;
+    margin: 4px 0 4px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #B8C5C6;
+    border-radius: 5px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #8FA5A7;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
+}</string>
+   </property>
+   <property name="horizontalScrollBarPolicy">
+    <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+   </property>
+   <property name="widgetResizable">
+    <bool>true</bool>
+   </property>
+   <widget class="QWidget" name="scrollAreaWidgetContents">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1237</width>
+      <height>407</height>
+     </rect>
+    </property>
+    <widget class="QWidget" name="verticalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>1221</width>
+       <height>381</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="holiday_list_layout"/>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="add_holiday_button">
+   <property name="geometry">
+    <rect>
+     <x>1010</x>
+     <y>630</y>
+     <width>250</width>
+     <height>70</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>250</width>
+     <height>70</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>250</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial Black</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    background-color: #3B4E53;
+    color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 8px;
+    padding: 8px 18px;
+}
+
+QPushButton:hover {
+    background-color: #3D8589;
+}
+</string>
+   </property>
+   <property name="text">
+    <string>Add New Holiday</string>
    </property>
   </widget>
  </widget>

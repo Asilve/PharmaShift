@@ -31,6 +31,10 @@
   <property name="styleSheet">
    <string notr="true">#shift_editor {
     background-color: #F7F8F9;
+}
+QLabel {
+    color: #37474F;
+    font-weight: 600;
 }</string>
   </property>
   <widget class="QWidget" name="verticalLayoutWidget">

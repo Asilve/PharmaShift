@@ -31,8 +31,6 @@ class Database:
                 end_date TEXT NOT NULL,
                 start_time TEXT,
                 end_time TEXT,
-                covered INTEGER NOT NULL DEFAULT 0,
-                covered_by TEXT,
 
                 FOREIGN KEY (template_id)
                     REFERENCES templates(id)
@@ -83,7 +81,6 @@ class Database:
                     ON DELETE CASCADE
             )
         """)
-
         self.connection.execute("""
             CREATE TABLE IF NOT EXISTS schedule_shifts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -95,8 +92,6 @@ class Database:
                 rate REAL NOT NULL,
                 location TEXT NOT NULL,
                 holiday_affected INTEGER NOT NULL DEFAULT 0,
-                covered INTEGER NOT NULL DEFAULT 0,
-                covered_by TEXT,
 
                 FOREIGN KEY (schedule_day_id)
                     REFERENCES schedule_days(id)
@@ -397,9 +392,7 @@ class Database:
                         holiday_hours,
                         rate,
                         location,
-                        holiday_affected,
-                        covered,
-                        covered_by
+                        holiday_affected
                     )
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
@@ -411,9 +404,7 @@ class Database:
                         getattr(shift, "holiday_hours", 0),
                         shift.rate,
                         shift.location,
-                        int(getattr(shift, "holiday_affected", False)),
-                        int(getattr(shift, "covered", False)),
-                        getattr(shift, "covered_by", None)
+                        int(getattr(shift, "holiday_affected", False))
                     )
                 )
 
@@ -518,9 +509,7 @@ class Database:
                     holiday_hours,
                     rate,
                     location,
-                    holiday_affected,
-                    covered,
-                    covered_by
+                    holiday_affected
                 FROM schedule_shifts
                 WHERE schedule_day_id = ?
                 ORDER BY start_time
@@ -541,8 +530,6 @@ class Database:
 
                 shift.holiday_hours = shift_row[4]
                 shift.holiday_affected = bool(shift_row[7])
-                shift.covered = bool(shift_row[8])
-                shift.covered_by = shift_row[9]
 
                 day.add_shift(shift)
 
@@ -568,7 +555,7 @@ class Database:
             "yyyy-MM-dd"
         )
 
-    def add_holiday(self,template_id,start_date,end_date,start_time=None,end_time=None,covered=False,covered_by=None):
+    def add_holiday(self,template_id,start_date,end_date,start_time=None,end_time=None):
         cursor = self.connection.execute(
             """
             INSERT INTO holidays (
@@ -576,20 +563,16 @@ class Database:
                 start_date,
                 end_date,
                 start_time,
-                end_time,
-                covered,
-                covered_by
+                end_time
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
             """,
             (
                 template_id,
                 start_date.toString("yyyy-MM-dd"),
                 end_date.toString("yyyy-MM-dd"),
                 start_time,
-                end_time,
-                int(covered),
-                covered_by
+                end_time
             )
         )
         self.connection.commit()
@@ -604,9 +587,7 @@ class Database:
                 start_date,
                 end_date,
                 start_time,
-                end_time,
-                covered,
-                covered_by
+                end_time
             FROM holidays
             WHERE template_id = ?
             ORDER BY start_date, start_time
@@ -623,8 +604,6 @@ class Database:
                 end_date=self._date_from_string(row[3]),
                 start_time=row[4],
                 end_time=row[5],
-                covered=bool(row[6]),
-                covered_by=row[7],
                 holiday_id=row[0]
             )
 
@@ -642,9 +621,7 @@ class Database:
                 start_date,
                 end_date,
                 start_time,
-                end_time,
-                covered,
-                covered_by
+                end_time
             FROM holidays
             WHERE id = ?
             """,
@@ -662,12 +639,10 @@ class Database:
             end_date=self._date_from_string(row[3]),
             start_time=row[4],
             end_time=row[5],
-            covered=bool(row[6]),
-            covered_by=row[7],
             holiday_id=row[0]
         )
 
-    def update_holiday(self,holiday_id,template_id,start_date,end_date,start_time=None,end_time=None,covered=False,covered_by=None):
+    def update_holiday(self,holiday_id,template_id,start_date,end_date,start_time=None,end_time=None):
         self.connection.execute(
             """
             UPDATE holidays
@@ -676,9 +651,7 @@ class Database:
                 start_date = ?,
                 end_date = ?,
                 start_time = ?,
-                end_time = ?,
-                covered = ?,
-                covered_by = ?
+                end_time = ?
             WHERE id = ?
             """,
             (
@@ -687,8 +660,6 @@ class Database:
                 end_date.toString("yyyy-MM-dd"),
                 start_time,
                 end_time,
-                int(covered),
-                covered_by,
                 holiday_id
             )
         )

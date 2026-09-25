@@ -1,7 +1,7 @@
 class HolidayValidator:
 
     @staticmethod
-    def validate(start_date,end_date,start_time=None,end_time=None,covered=False,covered_by=None):
+    def validate(start_date,end_date,start_time=None,end_time=None):
         errors = []
 
         # Date validation
@@ -47,18 +47,4 @@ class HolidayValidator:
                     if start_time >= end_time:
                         errors.append("End time must be after the start time.")
 
-        # Coverage validation
-        if covered:
-            if (covered_by is None or not str(covered_by).strip()):
-                errors.append(
-                    "A person must be specified when "
-                    "the holiday is marked as covered."
-                )
-
-        else:
-            if (covered_by is not None and str(covered_by).strip()):
-                errors.append(
-                    "A covered by person cannot be specified "
-                    "unless the holiday is marked as covered."
-                )
         return errors

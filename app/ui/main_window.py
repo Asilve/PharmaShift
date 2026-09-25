@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         self.schedule_preview_page = SchedulePreviewPage()
         self.schedule_generator = ScheduleGenerator()
         self.manage_templates_page = ManageTemplatesPage(self.database)
-        self.manage_holidays_page = ManageHolidaysPage()
+        self.manage_holidays_page = ManageHolidaysPage(self.database)
         self.template_editor_page = TemplateEditorPage(self.database)
         self.saved_schedules_page = SavedSchedulesPage(self.database)
 
@@ -109,6 +109,8 @@ class MainWindow(QMainWindow):
         self.page_stack.setCurrentWidget(self.manage_templates_page)
 
     def show_manage_holidays(self):
+        self.manage_holidays_page.load_employees()
+        self.manage_holidays_page.load_holidays()
         self.page_stack.setCurrentWidget(self.manage_holidays_page)
 
     def show_select_dates(self):
