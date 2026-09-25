@@ -1,5 +1,12 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QFrame, QSizePolicy
+from PySide6.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QFrame,
+    QSizePolicy
+)
 
 
 class ShiftPreview(QWidget):
@@ -17,6 +24,7 @@ class ShiftPreview(QWidget):
         frame_layout.setContentsMargins(4, 4, 4, 4)
         frame_layout.setSpacing(2)
 
+        # Location
         name_label = QLabel(self.shift.location)
         name_label.setWordWrap(True)
         name_label.setStyleSheet("""
@@ -28,6 +36,7 @@ class ShiftPreview(QWidget):
         """)
         frame_layout.addWidget(name_label)
 
+        # Time
         if (
             self.shift.start_time is not None
             and self.shift.end_time is not None
@@ -46,13 +55,21 @@ class ShiftPreview(QWidget):
 
             frame_layout.addWidget(time_label)
 
+        # Hours / holiday information / rate
         details_layout = QHBoxLayout()
         details_layout.setContentsMargins(0, 0, 0, 0)
         details_layout.setSpacing(4)
 
-        hours_label = QLabel(
-            self.format_hours(self.shift.hours)
-        )
+        if self.shift.holiday_affected:
+            hours_label = QLabel(
+                f"H: {self.format_hours_short(self.shift.holiday_hours)}"
+                f" | "
+                f"W: {self.format_hours_short(self.shift.worked_hours)}"
+            )
+        else:
+            hours_label = QLabel(
+                self.format_hours(self.shift.hours)
+            )
 
         rate_label = QLabel(
             f"£{self.shift.rate:.2f}/hr"
@@ -78,7 +95,8 @@ class ShiftPreview(QWidget):
 
         frame_layout.addLayout(details_layout)
 
-        total_pay = self.shift.hours * self.shift.rate
+        # Pay is based on worked hours
+        total_pay = self.shift.worked_hours * self.shift.rate
 
         pay_label = QLabel(
             f"Total: £{total_pay:.2f}"
@@ -96,12 +114,24 @@ class ShiftPreview(QWidget):
 
         frame_layout.addWidget(pay_label)
 
-        frame.setStyleSheet("""
-            #shift_frame {
-                background-color: #F4F7FA;
-                border: 1px solid #BFC9D1;
+        if not self.shift.holiday_affected:
+            background_colour = "#F4F7FA"
+            border_colour = "#BFC9D1"
+
+        elif self.shift.worked_hours <= 0:
+            background_colour = "#FFF1F1"
+            border_colour = "#E3B4B4"
+
+        else:
+            background_colour = "#FFF8E8"
+            border_colour = "#E5C985"
+
+        frame.setStyleSheet(f"""
+            #shift_frame {{
+                background-color: {background_colour};
+                border: 1px solid {border_colour};
                 border-radius: 7px;
-            }
+            }}
         """)
 
         layout = QVBoxLayout(self)
@@ -123,3 +153,13 @@ class ShiftPreview(QWidget):
             return f"{int(hours)} hours"
 
         return f"{hours:g} hours"
+
+    @staticmethod
+    def format_hours_short(hours):
+        if hours is None:
+            return "0h"
+
+        if hours.is_integer():
+            return f"{int(hours)}h"
+
+        return f"{hours:g}h"

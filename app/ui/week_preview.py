@@ -53,8 +53,8 @@ class WeekPreview(QWidget):
             }
         """)
 
-        hours_label = QLabel(self.format_hours(self.total_hours))
-        pay_label = QLabel(f"£{self.total_pay:.2f}")
+        hours_label = QLabel(f"{self.format_hours(self.worked_hours)} worked")
+        pay_label = QLabel(f"£{self.worked_pay:.2f}")
 
         hours_label.setStyleSheet("""
             QLabel {
@@ -102,3 +102,11 @@ class WeekPreview(QWidget):
 
         return f"{hours:g} hours"
 
+    @property
+    def worked_hours(self):
+        return sum(day.worked_hours for day in self.days)
+
+
+    @property
+    def worked_pay(self):
+        return sum(day.worked_pay for day in self.days)

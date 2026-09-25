@@ -380,7 +380,7 @@ QScrollBar::sub-page:vertical {
   <widget class="QPushButton" name="add_holiday_button">
    <property name="geometry">
     <rect>
-     <x>1010</x>
+     <x>20</x>
      <y>630</y>
      <width>250</width>
      <height>70</height>
@@ -420,6 +420,51 @@ QPushButton:hover {
    </property>
    <property name="text">
     <string>Add New Holiday</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="continue_button">
+   <property name="geometry">
+    <rect>
+     <x>1010</x>
+     <y>630</y>
+     <width>250</width>
+     <height>70</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>250</width>
+     <height>70</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>250</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial Black</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+    background-color: #3B4E53;
+    color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 8px;
+    padding: 8px 18px;
+}
+
+QPushButton:hover {
+    background-color: #3D8589;
+}
+</string>
+   </property>
+   <property name="text">
+    <string>Continue</string>
    </property>
   </widget>
  </widget>

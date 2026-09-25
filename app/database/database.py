@@ -1,4 +1,5 @@
 import sqlite3
+from PySide6.QtCore import QDate, QTime
 
 from models.shift import Shift
 from models.template import EmployeeTemplate
@@ -92,6 +93,8 @@ class Database:
                 rate REAL NOT NULL,
                 location TEXT NOT NULL,
                 holiday_affected INTEGER NOT NULL DEFAULT 0,
+                covered INTEGER NOT NULL DEFAULT 0,
+                covered_by TEXT NOT NULL DEFAULT '',
 
                 FOREIGN KEY (schedule_day_id)
                     REFERENCES schedule_days(id)
@@ -392,7 +395,9 @@ class Database:
                         holiday_hours,
                         rate,
                         location,
-                        holiday_affected
+                        holiday_affected,
+                        covered,
+                        covered_by
                     )
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
@@ -401,10 +406,12 @@ class Database:
                         shift.start_time,
                         shift.end_time,
                         shift.hours,
-                        getattr(shift, "holiday_hours", 0),
+                        shift.holiday_hours,
                         shift.rate,
                         shift.location,
-                        int(getattr(shift, "holiday_affected", False))
+                        shift.holiday_affected,
+                        shift.covered,
+                        shift.covered_by
                     )
                 )
 
@@ -509,7 +516,9 @@ class Database:
                     holiday_hours,
                     rate,
                     location,
-                    holiday_affected
+                    holiday_affected,
+                    covered,
+                    covered_by
                 FROM schedule_shifts
                 WHERE schedule_day_id = ?
                 ORDER BY start_time
@@ -525,11 +534,12 @@ class Database:
                     hours=shift_row[3],
                     location=shift_row[6],
                     rate=shift_row[5],
-                    shift_id=shift_row[0]
+                    shift_id=shift_row[0],
+                    holiday_hours=shift_row[4],
+                    holiday_affected=bool(shift_row[7]),
+                    covered=bool(shift_row[8]),
+                    covered_by=shift_row[9]
                 )
-
-                shift.holiday_hours = shift_row[4]
-                shift.holiday_affected = bool(shift_row[7])
 
                 day.add_shift(shift)
 
@@ -579,6 +589,7 @@ class Database:
         return cursor.lastrowid
 
     def get_holidays(self, template_id):
+
         cursor = self.connection.execute(
             """
             SELECT

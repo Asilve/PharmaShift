@@ -75,8 +75,8 @@ class DayPreview(QWidget):
         summary_layout.setSpacing(1)
 
         if self.day.shifts:
-            hours_label = QLabel(self.format_hours(self.day.total_hours))
-            pay_label = QLabel(f"£{self.day.total_pay:.2f}")
+            hours_label = QLabel(f"{self.format_hours(self.day.worked_hours)}")
+            pay_label = QLabel(f"£{self.day.worked_pay:.2f}")
 
             hours_label.setAlignment(Qt.AlignCenter)
             pay_label.setAlignment(Qt.AlignCenter)

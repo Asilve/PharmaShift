@@ -18,6 +18,14 @@ class Schedule:
         return sum(day.total_pay for day in self.days)
 
     @property
+    def worked_hours(self):
+        return sum(day.worked_hours for day in self.days)
+
+    @property
+    def worked_pay(self):
+        return sum(day.worked_pay for day in self.days)
+
+    @property
     def weekly_totals(self):
         weeks = []
 

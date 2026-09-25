@@ -2,7 +2,6 @@ from PySide6.QtCore import Qt, Signal, QTimer
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QPushButton,QLayout,QFrame,QHBoxLayout,QLabel,QSizePolicy, QApplication, QFileDialog, QMessageBox
 
-
 from ui.week_preview import WeekPreview
 from ui.schedule_header import ScheduleHeader
 from ui.preview_page import PreviewPage
@@ -110,8 +109,8 @@ class SchedulePreviewPage(QWidget):
             }
         """)
 
-        hours_label = QLabel(self.format_hours(self.schedule.total_hours))
-        pay_label = QLabel(f"£{self.schedule.total_pay:.2f}")
+        hours_label = QLabel(f"{self.format_hours(self.schedule.worked_hours)} worked")
+        pay_label = QLabel(f"£{self.schedule.worked_pay:.2f}")
 
         hours_label.setStyleSheet("""
             QLabel {
@@ -219,3 +218,5 @@ class SchedulePreviewPage(QWidget):
             return f"{int(hours)} hours"
 
         return f"{hours:g} hours"
+
+    

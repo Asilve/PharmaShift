@@ -9,6 +9,7 @@ from ui.holiday_dialogue import HolidayDialogue
 class ManageHolidaysPage(QWidget):
 
     back_clicked = Signal()
+    continue_clicked = Signal()
 
     def __init__(self, database, parent=None):
         super().__init__(parent)
@@ -41,6 +42,7 @@ class ManageHolidaysPage(QWidget):
         self.holiday_list_widget = self.ui.findChild(QWidget,"scrollAreaWidgetContents")
         self.holiday_list_layout = self.ui.findChild(QVBoxLayout,"holiday_list_layout")
         self.add_holiday_button = self.ui.findChild(QPushButton,"add_holiday_button")
+        self.continue_button = self.ui.findChild(QPushButton, "continue_button")
 
     # Setup
     def setup_filters(self):
@@ -59,6 +61,7 @@ class ManageHolidaysPage(QWidget):
     # Signals
     def connect_signals(self):
         self.back_button.clicked.connect(self.back_clicked.emit)
+        self.continue_button.clicked.connect(self.continue_clicked.emit)
         self.add_holiday_button.clicked.connect(self.add_holiday)
         self.clear_filters_button.clicked.connect(self.clear_filters)
         self.employee_combo.currentIndexChanged.connect(self.apply_filters)
@@ -286,5 +289,28 @@ class ManageHolidaysPage(QWidget):
 
         self.holiday_list_widget.setMinimumHeight(content_height)
         self.holiday_list_widget.updateGeometry()
+
+    def prepare_for_schedule(self,template,start_date,end_date):
+        self.continue_button.setVisible(True)
+        self.continue_button.setEnabled(True)
+        self.schedule_template = template
+        self.schedule_start_date = start_date
+        self.schedule_end_date = end_date
+        self.manage_holidays_origin = "schedule_generation"
+        # Select the employee
+        self.employee_combo.blockSignals(True)
+        index = self.employee_combo.findData(template.id)
+        if index >= 0:
+            self.employee_combo.setCurrentIndex(index)
+
+        self.employee_combo.blockSignals(False)
+        # Set the date range
+        self.from_date_edit.blockSignals(True)
+        self.to_date_edit.blockSignals(True)
+        self.from_date_edit.setDate(start_date)
+        self.to_date_edit.setDate(end_date)
+        self.from_date_edit.blockSignals(False)
+        self.to_date_edit.blockSignals(False)
+        self.apply_filters()
 
     
