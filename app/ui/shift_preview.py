@@ -5,7 +5,9 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QFrame,
-    QSizePolicy
+    QSizePolicy,
+    QCheckBox,
+    QLineEdit
 )
 
 
@@ -112,7 +114,59 @@ class ShiftPreview(QWidget):
             }
         """)
 
+        
         frame_layout.addWidget(pay_label)
+
+        # Coverage
+        if self.shift.holiday_affected:
+            coverage_layout = QHBoxLayout()
+            coverage_layout.setContentsMargins(0, 2, 0, 0)
+            coverage_layout.setSpacing(4)
+
+            self.covered_checkbox = QCheckBox("")
+            self.covered_checkbox.setChecked(self.shift.covered)
+
+            self.covered_by_edit = QLineEdit()
+            self.covered_by_edit.setPlaceholderText("Covered By")
+            self.covered_by_edit.setText(self.shift.covered_by)
+
+            self.covered_by_edit.setEnabled(self.shift.covered)
+
+            self.covered_checkbox.setStyleSheet("""
+                QCheckBox {
+                    color: #52636F;
+                    font-size: 9px;
+                }
+            """)
+
+            self.covered_by_edit.setStyleSheet("""
+                QLineEdit {
+                    color: #263238;
+                    font-size: 9px;
+                    padding: 2px 4px;
+                    border: 1px solid #BFC9D1;
+                    border-radius: 4px;
+                    background-color: white;
+                }
+
+                QLineEdit:disabled {
+                    color: #9AA5AB;
+                    background-color: #E9EDF0;
+                }
+            """)
+
+            coverage_layout.addWidget(self.covered_checkbox)
+            coverage_layout.addWidget(self.covered_by_edit)
+
+            frame_layout.addLayout(coverage_layout)
+
+            self.covered_checkbox.toggled.connect(
+                self.coverage_toggled
+            )
+
+            self.covered_by_edit.textChanged.connect(
+                self.coverage_by_changed
+            )
 
         if not self.shift.holiday_affected:
             background_colour = "#F4F7FA"
@@ -163,3 +217,14 @@ class ShiftPreview(QWidget):
             return f"{int(hours)}h"
 
         return f"{hours:g}h"
+
+    def coverage_toggled(self, checked):
+        self.shift.covered = checked
+        self.covered_by_edit.setEnabled(checked)
+
+        if not checked:
+            self.shift.covered_by = ""
+            self.covered_by_edit.clear()
+
+    def coverage_by_changed(self, text):
+        self.shift.covered_by = text
