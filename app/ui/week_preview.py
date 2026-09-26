@@ -55,6 +55,7 @@ class WeekPreview(QWidget):
 
         hours_label = QLabel(f"{self.format_hours(self.worked_hours)} worked")
         pay_label = QLabel(f"£{self.worked_pay:.2f}")
+        holiday_label = QLabel(f"Holiday: {self.format_hours_short(self.holiday_hours)}")
 
         hours_label.setStyleSheet("""
             QLabel {
@@ -64,9 +65,9 @@ class WeekPreview(QWidget):
             }
         """)
 
-        pay_label.setStyleSheet("""
+        holiday_label.setStyleSheet("""
             QLabel {
-                color: #263238;
+                color: #9A6B00;
                 font-size: 11px;
                 font-weight: 600;
             }
@@ -75,7 +76,22 @@ class WeekPreview(QWidget):
         summary_layout.addStretch()
         summary_layout.addWidget(title_label)
         summary_layout.addWidget(hours_label)
-        summary_layout.addWidget(pay_label)
+        if self.holiday_hours > 0:
+            summary_layout.addWidget(holiday_label)
+
+        if self.unallocated_holiday_hours > 0:
+            unallocated_label = QLabel(
+                f"⚠ Unallocated: "
+                f"{self.format_hours_short(self.unallocated_holiday_hours)}"
+            )
+            unallocated_label.setStyleSheet("""
+                QLabel {
+                    color: #B3261E;
+                    font-size: 11px;
+                    font-weight: 700;
+                }
+            """)
+            summary_layout.addWidget(unallocated_label)
 
         summary.setStyleSheet("""
             #weekly_summary {
@@ -84,7 +100,16 @@ class WeekPreview(QWidget):
                 border-radius: 7px;
             }
         """)
+        summary_layout.addWidget(pay_label)
 
+        pay_label.setStyleSheet("""
+            QLabel {
+                color: #263238;
+                font-size: 11px;
+                font-weight: 600;
+            }
+        """)
+        
         return summary
 
     @property
@@ -106,7 +131,29 @@ class WeekPreview(QWidget):
     def worked_hours(self):
         return sum(day.worked_hours for day in self.days)
 
-
     @property
     def worked_pay(self):
         return sum(day.worked_pay for day in self.days)
+
+    @property
+    def holiday_hours(self):
+        return sum(
+            shift.holiday_hours
+            for day in self.days
+            for shift in day.shifts
+        )
+
+    @property
+    def unallocated_holiday_hours(self):
+        return sum(
+            day.unallocated_holiday_hours
+            for day in self.days
+        )
+
+    @staticmethod
+    def format_hours_short(hours):
+        if hours.is_integer():
+            return f"{int(hours)}h"
+
+        return f"{hours:g}h"
+    

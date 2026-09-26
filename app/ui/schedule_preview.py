@@ -110,6 +110,8 @@ class SchedulePreviewPage(QWidget):
         """)
 
         hours_label = QLabel(f"{self.format_hours(self.schedule.worked_hours)} worked")
+        holiday_label = QLabel(f"Holiday: {self.format_hours_short(self.schedule.holiday_hours)}")
+
         pay_label = QLabel(f"£{self.schedule.worked_pay:.2f}")
 
         hours_label.setStyleSheet("""
@@ -128,9 +130,34 @@ class SchedulePreviewPage(QWidget):
             }
         """)
 
+        holiday_label.setStyleSheet("""
+            QLabel {
+                color: #9A6B00;
+                font-size: 12px;
+                font-weight: 600;
+            }
+        """)
+
         summary_layout.addStretch()
         summary_layout.addWidget(title_label)
         summary_layout.addWidget(hours_label)
+        if self.schedule.holiday_hours > 0:
+            summary_layout.addWidget(holiday_label)
+        if self.schedule.unallocated_holiday_hours > 0:
+            unallocated_label = QLabel(
+                f"⚠ Unallocated: "
+                f"{self.format_hours_short(self.schedule.unallocated_holiday_hours)}"
+            )
+
+            unallocated_label.setStyleSheet("""
+                QLabel {
+                    color: #B3261E;
+                    font-size: 12px;
+                    font-weight: 700;
+                }
+            """)
+
+        summary_layout.addWidget(unallocated_label)
         summary_layout.addWidget(pay_label)
 
         summary.setStyleSheet("""
@@ -210,7 +237,6 @@ class SchedulePreviewPage(QWidget):
             return
         QMessageBox.information(self,"PDF Exported",f"Schedule exported successfully.\n\n"f"Saved to:\n{file_path}")
 
-
     @staticmethod
     def format_hours(hours):
 
@@ -219,4 +245,24 @@ class SchedulePreviewPage(QWidget):
 
         return f"{hours:g} hours"
 
-    
+    @property
+    def holiday_hours(self):
+        return sum(
+            shift.holiday_hours
+            for day in self.days
+            for shift in day.shifts
+        )
+
+    @property
+    def unallocated_holiday_hours(self):
+        return sum(
+            day.unallocated_holiday_hours
+            for day in self.days
+        )
+
+    @staticmethod
+    def format_hours_short(hours):
+        if hours.is_integer():
+            return f"{int(hours)}h"
+
+        return f"{hours:g}h"

@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
         self.end_date = None
         self.schedule_preview_origin = None
         self.manage_holidays_origin = None
+        self.loaded_schedule = None
 
          # Create application pages
         self.home_page = HomePage()
@@ -172,35 +173,39 @@ class MainWindow(QMainWindow):
         schedule = self.database.load_schedule(schedule_id)
         if schedule is None:
             return
-
-        self.schedule_preview_page.set_schedule(schedule)
-        self.schedule_preview_page.show_first_week()
-        self.schedule_preview_origin = "saved_schedules"
-        self.show_schedule_preview()
+        self.loaded_schedule = schedule
+        self.manage_holidays_page.prepare_for_saved_schedule(schedule)
+        self.page_stack.setCurrentWidget(self.manage_holidays_page)
 
     def schedule_preview_back(self):
-        if self.schedule_preview_origin == "saved_schedules":
-            self.show_saved_schedules()
-
-        else:
-            self.show_select_dates()
+        self.page_stack.setCurrentWidget(self.manage_holidays_page)
 
     def continue_schedule_generation(self):
-        template = self.selected_template
-        schedule = self.schedule_generator.generate(template,self.start_date,self.end_date)
-        holidays = self.database.get_holidays(template.id)
+        if (self.manage_holidays_page.manage_holidays_origin == "saved_schedule"):
+            schedule = self.loaded_schedule
+            self.schedule_preview_origin = "saved_schedules"
+        else:
+            schedule = self.schedule_generator.generate(
+                self.selected_template,
+                self.start_date,
+                self.end_date
+            )
+            self.schedule_preview_origin = "select_dates"
+        holidays = self.database.get_holidays(schedule.template.id)
         self.holiday_processor.apply_holidays(schedule,holidays)
         self.schedule_preview_page.set_schedule(schedule)
         self.schedule_preview_page.show_first_week()
-        self.schedule_preview_origin = "select_dates"
         self.show_schedule_preview()
 
     def manage_holidays_back(self):
-
-        if self.manage_holidays_origin == "schedule_generation":
+        origin = self.manage_holidays_page.manage_holidays_origin
+        if origin == "schedule_generation":
             self.show_select_dates()
+        elif origin == "saved_schedule":
+            self.show_saved_schedules()
         else:
             self.show_home()
+
 
     def close_application(self):
         QApplication.quit()

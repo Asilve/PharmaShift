@@ -95,10 +95,42 @@ class DayPreview(QWidget):
                     font-size: 10px;
                 }
             """)
+            if self.day.has_unallocated_holiday:
+                hours_label.setStyleSheet("""
+                    QLabel {
+                        color: #B3261E;
+                        font-size: 9px;
+                        font-weight: 700;
+                    }
+                """)
+            elif any(
+                shift.holiday_affected
+                for shift in self.day.shifts
+            ):
+                hours_label.setStyleSheet("""
+                    QLabel {
+                        color: #9A6B00;
+                        font-size: 9px;
+                        font-weight: 700;
+                    }
+                """)
 
             summary_layout.addWidget(hours_label)
             summary_layout.addWidget(pay_label)
-
+            if self.day.has_unallocated_holiday:
+                warning_label = QLabel(f"Unallocated holiday: " f"{self.format_hours_short(self.day.unallocated_holiday_hours)}")
+                warning_label.setAlignment(Qt.AlignCenter)
+                warning_label.setStyleSheet("""
+                    QLabel {
+                        color: #9A6B00;
+                        font-size: 9px;
+                        font-weight: 600;
+                    }
+                """)
+                summary_layout.addWidget(warning_label)
+                summary.setFixedHeight(50)
+            else:
+                summary.setFixedHeight(36)
         else:
             summary_label = QLabel("---")
             summary_label.setAlignment(Qt.AlignCenter)
@@ -186,7 +218,6 @@ class DayPreview(QWidget):
 
         summary = QFrame()
         summary.setObjectName("day_summary")
-        summary.setFixedHeight(50)
 
         empty_area.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
@@ -218,3 +249,11 @@ class DayPreview(QWidget):
             return f"{int(hours)} hours"
 
         return f"{hours:g} hours"
+
+    @staticmethod
+    def format_hours_short(hours):
+        if hours.is_integer():
+            return f"{int(hours)}h"
+
+        return f"{hours:g}h"
+    

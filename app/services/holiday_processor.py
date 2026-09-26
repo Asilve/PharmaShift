@@ -1,6 +1,11 @@
 class HolidayProcessor:
 
     def apply_holidays(self, schedule, holidays):
+        for day in schedule.days:
+            day.unallocated_holiday_hours = 0.0
+            for shift in day.shifts:
+                shift.holiday_hours = 0.0
+                shift.holiday_affected = False
         for holiday in holidays:
             self.apply_holiday(schedule, holiday)
 
@@ -55,7 +60,7 @@ class HolidayProcessor:
 
                 allocated_holiday_hours += shift.holiday_hours
 
-            day.unallocated_holiday_hours = max(
+            day.unallocated_holiday_hours += max(
                 0.0,
                 holiday_duration - allocated_holiday_hours
             )

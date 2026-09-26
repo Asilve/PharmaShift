@@ -27,3 +27,6 @@ class Day:
             shift.worked_hours * shift.rate
             for shift in self.shifts
         )
+    @property
+    def has_unallocated_holiday(self):
+        return self.unallocated_holiday_hours > 0

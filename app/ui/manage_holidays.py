@@ -17,6 +17,7 @@ class ManageHolidaysPage(QWidget):
         self.templates = {}
         self.cards = []
         self.empty_label = None
+        self.saved_schedule = None
         self.load_ui()
         self.find_widgets()
         self.setup_filters()
@@ -313,4 +314,24 @@ class ManageHolidaysPage(QWidget):
         self.to_date_edit.blockSignals(False)
         self.apply_filters()
 
-    
+    def prepare_for_saved_schedule(self, schedule):
+        self.saved_schedule = schedule
+        self.manage_holidays_origin = "saved_schedule"
+        self.employee_combo.blockSignals(True)
+        index = self.employee_combo.findData(schedule.template.id)
+        if index >= 0:
+            self.employee_combo.setCurrentIndex(index)
+        self.employee_combo.blockSignals(False)
+        self.from_date_edit.blockSignals(True)
+        self.to_date_edit.blockSignals(True)
+        self.from_date_edit.setDate(schedule.start_date)
+        self.to_date_edit.setDate(schedule.end_date)
+        self.from_date_edit.blockSignals(False)
+        self.to_date_edit.blockSignals(False)
+        self.employee_combo.setEnabled(False)
+        self.from_date_edit.setEnabled(False)
+        self.to_date_edit.setEnabled(False)
+        self.continue_button.setVisible(True)
+        self.continue_button.setEnabled(True)
+        self.apply_filters()
+        

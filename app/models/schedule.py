@@ -57,3 +57,18 @@ class Schedule:
             })
 
         return weeks
+
+    @property
+    def holiday_hours(self):
+        return sum(
+            shift.holiday_hours
+            for day in self.days
+            for shift in day.shifts
+        )
+
+    @property
+    def unallocated_holiday_hours(self):
+        return sum(
+            day.unallocated_holiday_hours
+            for day in self.days
+        )
