@@ -13,7 +13,8 @@ class SchedulePdfExporter:
 
         # These correspond to the structure of the Schedule Preview.
         self.day_header_height = 34
-        self.day_summary_height = 32
+        self.day_summary_height = 36
+        self.day_summary_warning_height = 50
 
         self.shift_padding = 5
         self.shift_spacing = 4
@@ -136,36 +137,49 @@ class SchedulePdfExporter:
 
         return (tallest_day+ self.weekly_summary_height)
 
-    def calculate_day_height(self,day,schedule):
+    def calculate_day_height(self, day, schedule):
         # Days outside the requested period use the
         # smaller/empty presentation.
-        in_period = (schedule.start_date <= day.date <= schedule.end_date)
+        in_period = (
+            schedule.start_date <= day.date <= schedule.end_date
+        )
 
         if not in_period:
-            return (self.day_header_height + self.outside_day_summary_height)
-        
+            return (
+                self.day_header_height
+                + self.outside_day_summary_height
+            )
+
         # Header
         height = self.day_header_height
 
         # Shift area
         if day.shifts:
             shift_height = 0
+
             for shift in day.shifts:
                 shift_height += self.calculate_shift_height(shift)
 
             # Shift area padding + spacing between shifts
-            shift_height += (self.shift_padding * 2)
+            shift_height += self.shift_padding * 2
 
             if len(day.shifts) > 1:
-                shift_height += (self.shift_spacing * (len(day.shifts) - 1))
+                shift_height += self.shift_spacing * (
+                    len(day.shifts) - 1
+                )
+
             height += shift_height
 
         else:
             # Empty shift area still exists.
-            height += (self.shift_padding * 2)
+            height += self.shift_padding * 2
 
         # Day summary
-        height += self.day_summary_height
+        if day.has_unallocated_holiday:
+            height += self.day_summary_warning_height
+        else:
+            height += self.day_summary_height
+
         return height
 
     def calculate_shift_height(self, shift):
@@ -173,7 +187,10 @@ class SchedulePdfExporter:
         height = 12
 
         # Timed shifts have an additional line.
-        if (shift.start_time is not None and shift.end_time is not None):
+        if (
+            shift.start_time is not None
+            and shift.end_time is not None
+        ):
             height += 10
 
         # Hours + rate
@@ -181,6 +198,10 @@ class SchedulePdfExporter:
 
         # Total pay
         height += 12
+
+        # Coverage
+        if shift.holiday_affected:
+            height += 10
 
         # Frame padding
         height += 6
@@ -247,20 +268,44 @@ class SchedulePdfExporter:
             pdf.drawCentredString(x + (width / 2),header_y + 8,date_text)
 
             # Empty body
-            body_y = (y+ self.outside_day_summary_height)
-            body_height = (height- self.day_header_height- self.outside_day_summary_height)
+            body_y = y + self.outside_day_summary_height
+            body_height = (
+                height
+                - self.day_header_height
+                - self.outside_day_summary_height
+            )
+
             pdf.setFillColor(self.color(self.outside_background))
             pdf.setStrokeColor(self.color(self.outside_border))
-            pdf.rect(x,body_y,width,body_height,fill=1,stroke=1)
+            pdf.rect(
+                x,
+                body_y,
+                width,
+                body_height,
+                fill=1,
+                stroke=1
+            )
 
             # Empty summary
             summary_y = y
 
-            pdf.rect(x,summary_y,width,self.outside_day_summary_height,fill=1,stroke=1)
+            pdf.rect(
+                x,
+                summary_y,
+                width,
+                self.outside_day_summary_height,
+                fill=1,
+                stroke=1
+            )
 
             return
 
         # Normal day
+        summary_height = (
+            self.day_summary_warning_height
+            if day.has_unallocated_holiday
+            else self.day_summary_height
+        )
 
         # White day header
         pdf.setFillColor(self.color("#FFFFFF"))
@@ -283,8 +328,12 @@ class SchedulePdfExporter:
 
         # Shift area
         # Body background + vertical borders
-        body_y = (y+ self.day_summary_height)
-        body_height = (height- self.day_header_height- self.day_summary_height)
+        body_y = y + summary_height
+        body_height = (
+            height
+            - self.day_header_height
+            - summary_height
+        )
         pdf.setFillColor(self.color("#FFFFFF"))
         pdf.setStrokeColor(self.color(self.day_border))
         pdf.setLineWidth(1)
@@ -301,104 +350,328 @@ class SchedulePdfExporter:
         pdf.setFillColor(self.color("#FFFFFF"))
         pdf.setStrokeColor(self.color(self.day_border))
         pdf.setLineWidth(1)
-        pdf.rect(x,summary_y,width,self.day_summary_height,fill=1,stroke=1)
+        pdf.rect(x,summary_y,width,summary_height,fill=1,stroke=1)
 
         if day.shifts:
-            # Hours
-            pdf.setFillColor(self.color(self.primary_text))
-            pdf.setFont("Helvetica-Bold",8)
-            hours_text = self.format_hours(day.total_hours)
-            pdf.drawCentredString(x + (width / 2),summary_y + 21,hours_text)
+            # Worked hours
+            if day.has_unallocated_holiday:
+                hours_colour = "#B3261E"
+            elif any(
+                shift.holiday_affected
+                for shift in day.shifts
+            ):
+                hours_colour = "#9A6B00"
+            else:
+                hours_colour = self.primary_text
 
-            # Pay
+            pdf.setFillColor(self.color(hours_colour))
+            pdf.setFont("Helvetica-Bold", 8)
+
+            hours_text = self.format_hours(day.worked_hours)
+
+            pdf.drawCentredString(
+                x + (width / 2),
+                summary_y + (
+                    summary_height - 13
+                    if day.has_unallocated_holiday
+                    else 21
+                ),
+                hours_text
+            )
+
+            # Worked pay
             pdf.setFillColor(self.color(self.muted_text))
-            pdf.setFont("Helvetica",7)
+            pdf.setFont("Helvetica", 7)
 
-            pay_text = (f"£{day.total_pay:.2f}")
-            pdf.drawCentredString(x + (width / 2),summary_y + 9,pay_text)
+            pay_text = f"£{day.worked_pay:.2f}"
+
+            pdf.drawCentredString(
+                x + (width / 2),
+                summary_y + (
+                    summary_height - 26
+                    if day.has_unallocated_holiday
+                    else 9
+                ),
+                pay_text
+            )
+
+            # Unallocated holiday
+            if day.has_unallocated_holiday:
+                pdf.setFillColor(self.color("#9A6B00"))
+                pdf.setFont("Helvetica-Bold", 7)
+
+                warning_text = (
+                    f"Unallocated holiday: "
+                    f"{self.format_hours_short(day.unallocated_holiday_hours)}"
+                )
+
+                pdf.drawCentredString(
+                    x + (width / 2),
+                    summary_y + 9,
+                    warning_text
+                )
 
         else:
             # Empty day
             pdf.setFillColor(self.color(self.placeholder_text))
-            pdf.setFont("Helvetica",7)
-            pdf.drawCentredString(x + (width / 2), summary_y + 13, "---")
+            pdf.setFont("Helvetica", 7)
+
+            pdf.drawCentredString(
+                x + (width / 2),
+                summary_y + (summary_height / 2) - 2,
+                "---"
+            )
 
     # Shift
-    def draw_shift(self,pdf,shift,x,y,width,height):
-        pdf.setFillColor(self.color(self.shift_background))
-        pdf.setStrokeColor(self.color(self.shift_border))
+    def draw_shift(self, pdf, shift, x, y, width, height):
+        # Shift colours
+        if not shift.holiday_affected:
+            background_colour = self.shift_background
+            border_colour = self.shift_border
+
+        elif shift.worked_hours <= 0:
+            background_colour = "#FFF1F1"
+            border_colour = "#E3B4B4"
+
+        else:
+            background_colour = "#FFF8E8"
+            border_colour = "#E5C985"
+
+        pdf.setFillColor(self.color(background_colour))
+        pdf.setStrokeColor(self.color(border_colour))
         pdf.setLineWidth(1)
-        pdf.roundRect(x,y,width,height,5,fill=1,stroke=1)
+
+        pdf.roundRect(
+            x,
+            y,
+            width,
+            height,
+            5,
+            fill=1,
+            stroke=1
+        )
 
         text_x = x + 4
-        current_y = (y+ height- 13)
+        current_y = y + height - 13
 
         # Location
         pdf.setFillColor(self.color(self.primary_text))
-        pdf.setFont("Helvetica-Bold",7)
-        pdf.drawString(text_x,current_y,shift.location)
+        pdf.setFont("Helvetica-Bold", 7)
+
+        pdf.drawString(
+            text_x,
+            current_y,
+            shift.location
+        )
+
         current_y -= 11
 
         # Timed shift
-        if (shift.start_time is not None and shift.end_time is not None):
+        if (
+            shift.start_time is not None
+            and shift.end_time is not None
+        ):
             pdf.setFillColor(self.color(self.secondary_text))
-            pdf.setFont("Helvetica",6)
-            pdf.drawString(text_x,current_y,f"{shift.start_time} - " f"{shift.end_time}")
+            pdf.setFont("Helvetica", 6)
+
+            pdf.drawString(
+                text_x,
+                current_y,
+                f"{shift.start_time} - {shift.end_time}"
+            )
+
             current_y -= 11
 
         # Hours
         pdf.setFillColor(self.color(self.secondary_text))
-        pdf.setFont("Helvetica",6)
-        pdf.drawString(text_x,current_y,self.format_hours(shift.hours))
+        pdf.setFont("Helvetica", 6)
+
+        if shift.holiday_affected:
+            hours_text = (
+                f"H: {self.format_hours_short(shift.holiday_hours)}"
+                f" | "
+                f"W: {self.format_hours_short(shift.worked_hours)}"
+            )
+        else:
+            hours_text = self.format_hours(shift.hours)
+
+        pdf.drawString(
+            text_x,
+            current_y,
+            hours_text
+        )
 
         # Rate
-        pdf.drawRightString(x + width - 4,current_y,f"£{shift.rate:.2f}/hr")
+        pdf.drawRightString(
+            x + width - 4,
+            current_y,
+            f"£{shift.rate:.2f}/hr"
+        )
+
         current_y -= 12
 
-        # Total
+        # Total pay
         pdf.setFillColor(self.color(self.primary_text))
-        pdf.setFont("Helvetica-Bold",7)
-        total_pay = (shift.hours* shift.rate)
-        pdf.drawRightString(x + width - 4,current_y,f"Total: £{total_pay:.2f}")
+        pdf.setFont("Helvetica-Bold", 7)
+
+        total_pay = shift.worked_hours * shift.rate
+
+        pdf.drawRightString(
+            x + width - 4,
+            current_y,
+            f"Total: £{total_pay:.2f}"
+        )
+
+        # Coverage
+        if shift.holiday_affected:
+            current_y -= 10
+
+            pdf.setFillColor(self.color(self.secondary_text))
+            pdf.setFont("Helvetica", 6)
+
+            if shift.covered and shift.covered_by:
+                coverage_text = f"✓ Covered by: {shift.covered_by}"
+            elif shift.covered:
+                coverage_text = "✓ Covered"
+            else:
+                coverage_text = "☐ Not covered"
+
+            pdf.drawString(
+                text_x,
+                current_y,
+                coverage_text
+            )
 
     # Weekly total
-    def draw_weekly_summary(self,pdf,week_days,x,y,width):
-        total_hours = sum(day.total_hours for day in week_days)
-        total_pay = sum(day.total_pay for day in week_days)
+    def draw_weekly_summary(self, pdf, week_days, x, y, width):
+        worked_hours = sum(
+            day.worked_hours
+            for day in week_days
+        )
+
+        worked_pay = sum(
+            day.worked_pay
+            for day in week_days
+        )
+
+        holiday_hours = sum(
+            shift.holiday_hours
+            for day in week_days
+            for shift in day.shifts
+        )
+
+        unallocated_holiday_hours = sum(
+            day.unallocated_holiday_hours
+            for day in week_days
+        )
 
         # Background + border
         pdf.setFillColor(self.color(self.weekly_background))
         pdf.setStrokeColor(self.color(self.weekly_border))
         pdf.setLineWidth(1)
-        pdf.roundRect(x,y,width,self.weekly_summary_height,5,fill=1,stroke=1)
 
-        # Weekly Total
-        pdf.setFillColor(self.color(self.secondary_text))
-        pdf.setFont("Helvetica-Bold",8)
-        weekly_text = "Weekly Total"
-
-        # Hours
-        hours_text = self.format_hours(total_hours)
-
-        # Pay
-        pay_text = f"£{total_pay:.2f}"
-
-        # Draw from right to left so the
-        # three pieces stay on one line.
+        pdf.roundRect(
+            x,
+            y,
+            width,
+            self.weekly_summary_height,
+            5,
+            fill=1,
+            stroke=1
+        )
 
         right_x = x + width - 10
 
-        pdf.setFillColor(self.color(self.primary_text))
-        pdf.drawRightString(right_x,y + 10,pay_text)
+        # Pay
+        pay_text = f"£{worked_pay:.2f}"
 
-        pay_width = pdf.stringWidth(pay_text,"Helvetica-Bold",8)
-        right_x -= pay_width + 12
         pdf.setFillColor(self.color(self.primary_text))
-        pdf.drawRightString(right_x,y + 10,hours_text)
-        hours_width = pdf.stringWidth(hours_text,"Helvetica-Bold",8)
+        pdf.setFont("Helvetica-Bold", 8)
+        pdf.drawRightString(
+            right_x,
+            y + 10,
+            pay_text
+        )
+
+        pay_width = pdf.stringWidth(
+            pay_text,
+            "Helvetica-Bold",
+            8
+        )
+
+        right_x -= pay_width + 12
+
+        # Worked hours
+        hours_text = f"{self.format_hours(worked_hours)} worked"
+
+        pdf.drawRightString(
+            right_x,
+            y + 10,
+            hours_text
+        )
+
+        hours_width = pdf.stringWidth(
+            hours_text,
+            "Helvetica-Bold",
+            8
+        )
+
         right_x -= hours_width + 12
+
+        # Holiday
+        if holiday_hours > 0:
+            holiday_text = (
+                f"Holiday: "
+                f"{self.format_hours_short(holiday_hours)}"
+            )
+
+            pdf.setFillColor(self.color("#9A6B00"))
+
+            pdf.drawRightString(
+                right_x,
+                y + 10,
+                holiday_text
+            )
+
+            holiday_width = pdf.stringWidth(
+                holiday_text,
+                "Helvetica-Bold",
+                8
+            )
+
+            right_x -= holiday_width + 12
+
+        # Unallocated
+        if unallocated_holiday_hours > 0:
+            unallocated_text = (
+                f"Unallocated: "
+                f"{self.format_hours_short(unallocated_holiday_hours)}"
+            )
+
+            pdf.setFillColor(self.color("#B3261E"))
+
+            pdf.drawRightString(
+                right_x,
+                y + 10,
+                unallocated_text
+            )
+
+            unallocated_width = pdf.stringWidth(
+                unallocated_text,
+                "Helvetica-Bold",
+                8
+            )
+
+            right_x -= unallocated_width + 12
+
+        # Weekly Total
         pdf.setFillColor(self.color(self.secondary_text))
-        pdf.drawRightString(right_x,y + 10,weekly_text)
+
+        pdf.drawRightString(
+            right_x,
+            y + 10,
+            "Weekly Total"
+        )
 
     # Helpers
     @staticmethod
@@ -412,37 +685,129 @@ class SchedulePdfExporter:
         return f"{hours:g} hours"
 
 
-    def draw_period_summary(self,pdf,schedule,x,y,width):
+    def draw_period_summary(self, pdf, schedule, x, y, width):
         # Background + border
         pdf.setFillColor(self.color(self.period_background))
         pdf.setStrokeColor(self.color(self.period_border))
         pdf.setLineWidth(1)
-        pdf.roundRect(x,y,width,30,5,fill=1,stroke=1)
 
-        # Text values
-        title_text = "Period Total"
-        hours_text = self.format_hours(schedule.total_hours)
-        pay_text = (f"£{schedule.total_pay:.2f}")
+        pdf.roundRect(
+            x,
+            y,
+            width,
+            30,
+            5,
+            fill=1,
+            stroke=1
+        )
 
-        # Draw from right to left
         right_x = x + width - 10
 
-        # Pay
+        # Worked pay
+        pay_text = f"£{schedule.worked_pay:.2f}"
+
         pdf.setFillColor(self.color(self.primary_text))
-        pdf.setFont("Helvetica-Bold",9)
-        pdf.drawRightString(right_x,y + 10,pay_text)
-        pay_width = pdf.stringWidth(pay_text,"Helvetica-Bold",9)
+        pdf.setFont("Helvetica-Bold", 9)
+
+        pdf.drawRightString(
+            right_x,
+            y + 10,
+            pay_text
+        )
+
+        pay_width = pdf.stringWidth(
+            pay_text,
+            "Helvetica-Bold",
+            9
+        )
 
         right_x -= pay_width + 12
 
-        # Hours
-        pdf.drawRightString(right_x,y + 10,hours_text)
-        hours_width = pdf.stringWidth(hours_text,"Helvetica-Bold",9)
+        # Worked hours
+        hours_text = (
+            f"{self.format_hours(schedule.worked_hours)} worked"
+        )
+
+        pdf.drawRightString(
+            right_x,
+            y + 10,
+            hours_text
+        )
+
+        hours_width = pdf.stringWidth(
+            hours_text,
+            "Helvetica-Bold",
+            9
+        )
+
         right_x -= hours_width + 12
+
+        # Holiday
+        if schedule.holiday_hours > 0:
+            holiday_text = (
+                f"Holiday: "
+                f"{self.format_hours_short(schedule.holiday_hours)}"
+            )
+
+            pdf.setFillColor(self.color("#9A6B00"))
+
+            pdf.drawRightString(
+                right_x,
+                y + 10,
+                holiday_text
+            )
+
+            holiday_width = pdf.stringWidth(
+                holiday_text,
+                "Helvetica-Bold",
+                9
+            )
+
+            right_x -= holiday_width + 12
+
+        # Unallocated
+        if schedule.unallocated_holiday_hours > 0:
+            unallocated_text = (
+                f"Unallocated: "
+                f"{self.format_hours_short(
+                    schedule.unallocated_holiday_hours
+                )}"
+            )
+
+            pdf.setFillColor(self.color("#B3261E"))
+
+            pdf.drawRightString(
+                right_x,
+                y + 10,
+                unallocated_text
+            )
+
+            unallocated_width = pdf.stringWidth(
+                unallocated_text,
+                "Helvetica-Bold",
+                9
+            )
+
+            right_x -= unallocated_width + 12
 
         # Period Total
         pdf.setFillColor(self.color(self.secondary_text))
-        pdf.drawRightString(right_x,y + 10,title_text)
+
+        pdf.drawRightString(
+            right_x,
+            y + 10,
+            "Period Total"
+        )
 
     def color(self, value):
         return HexColor(value)
+
+    @staticmethod
+    def format_hours_short(hours):
+        if hours is None:
+            return "0h"
+
+        if hours.is_integer():
+            return f"{int(hours)}h"
+
+        return f"{hours:g}h"
